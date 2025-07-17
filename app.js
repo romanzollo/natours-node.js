@@ -23,7 +23,7 @@ app.get('/api/v1/tours', (req, res) => {
 
 // --- получить конкретный тур --- //
 app.get('/api/v1/tours/:id', (req, res) => {
-  const id = req.params.id * 1;
+  const id = req.params.id * 1; // * 1 — чтобы преобразовать строку в число
   const tour = tours.find((el) => el.id === id);
 
   // проверяем на наличие тура
@@ -38,6 +38,24 @@ app.get('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     data: {
       tour,
+    },
+  });
+});
+
+// --- обновить конкретный тур --- //
+app.patch('/api/v1/tours/:id', (req, res) => {
+  // проверяем на наличие тура
+  if (Number(req.params.id) > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: '<Updated tour here...>',
     },
   });
 });

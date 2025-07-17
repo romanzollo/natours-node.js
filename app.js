@@ -60,6 +60,22 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+// --- удалить конкретный тур --- //
+app.delete('/api/v1/tours/:id', (req, res) => {
+  // проверяем на наличие тура
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 // --- создать новый тур --- //
 app.post('/api/v1/tours', (req, res) => {
   // req.body — здесь будут данные из JSON

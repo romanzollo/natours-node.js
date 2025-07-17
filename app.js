@@ -10,6 +10,7 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+// --- получить все туры --- //
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -20,6 +21,28 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+// --- получить конкретный тур --- //
+app.get('/api/v1/tours/:id', (req, res) => {
+  const id = req.params.id * 1;
+  const tour = tours.find((el) => el.id === id);
+
+  // проверяем на наличие тура
+  if (!tour) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
+
+// --- создать новый тур --- //
 app.post('/api/v1/tours', (req, res) => {
   // req.body — здесь будут данные из JSON
 

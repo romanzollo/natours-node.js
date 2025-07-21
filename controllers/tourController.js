@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+// Синхронно читаем JSON-файл с данными о турах и преобразуем его в JavaScript-объект
+// __dirname — путь к текущей директории, чтобы правильно указать путь к файлу
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );

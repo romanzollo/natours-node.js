@@ -6,6 +6,21 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+// --- middleware для проверки наличия ID тура --- //
+const checkID = (req, res, next, value) => {
+  console.log(`Tour id is: ${value}`);
+
+  // проверяем на наличие тура
+  if (Number(req.params.id) > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  next();
+};
+
 // --- получить все туры --- //
 const getAllTours = (req, res) => {
   res.status(200).json({
@@ -64,14 +79,6 @@ const createTour = (req, res) => {
 
 // --- обновить конкретный тур --- //
 const updateTour = (req, res) => {
-  // проверяем на наличие тура
-  if (Number(req.params.id) > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -102,4 +109,5 @@ module.exports = {
   createTour,
   updateTour,
   deleteTour,
+  checkID,
 };

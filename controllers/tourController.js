@@ -21,6 +21,23 @@ const checkID = (req, res, next, value) => {
   next();
 };
 
+// Middleware для проверки наличия обязательных полей в теле запроса
+// Применяется только к POST-запросу при создании тура
+const checkBody = (req, res, next) => {
+  const { name, price } = req.body;
+
+  // Проверяем, есть ли name и price в теле запроса
+  if (!name || !price) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Request must contain "name" and "price"',
+    });
+  }
+
+  // Если всё в порядке — передаём управление дальше
+  next();
+};
+
 // --- получить все туры --- //
 const getAllTours = (req, res) => {
   res.status(200).json({
@@ -110,4 +127,5 @@ module.exports = {
   updateTour,
   deleteTour,
   checkID,
+  checkBody,
 };

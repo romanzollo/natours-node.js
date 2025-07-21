@@ -7,5 +7,5 @@ const port = 3000;
 
 // Запускаем сервер и начинаем прослушивать входящие HTTP-запросы на указанном порту
 app.listen(port, () => {
-  console.log(`Приложение запущено на порту ${port}...`);
+  console.log(`App running on port ${port}...`);
 });

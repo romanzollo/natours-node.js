@@ -1,5 +1,4 @@
 const express = require('express');
-
 // Подключаем библиотеку morgan — логгер HTTP-запросов (для отладки)
 const morgan = require('morgan');
 
@@ -15,11 +14,15 @@ const app = express();
 // Middleware — функции, которые обрабатывают входящие запросы до того, как они попадут в маршруты
 
 // Логгируем информацию о запросах (метод, путь, статус, время) — только для режима разработки
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // Встроенный middleware: парсит тело входящих запросов из JSON в объект req.body
 // Теперь мы можем получать данные из POST/PATCH и других запросов с JSON
 app.use(express.json());
+
+app.use(express.static(`${__dirname}/public`));
 
 // Пример кастомного middleware
 // Выполняется при каждом запросе, выводит сообщение в консоль

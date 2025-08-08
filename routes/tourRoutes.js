@@ -9,7 +9,7 @@ const {
   updateTour,
   deleteTour,
   checkID,
-  checkBody,
+  checkBody
 } = require('./../controllers/tourController');
 
 // Создаём экземпляр маршрутизатора Express
@@ -22,7 +22,14 @@ const router = express.Router();
 router.param('id', checkID);
 
 // Определяем маршруты
-router.route('/').get(getAllTours).post(checkBody, createTour);
-router.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+router
+  .route('/')
+  .get(getAllTours)
+  .post(checkBody, createTour);
+router
+  .route('/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 
 module.exports = router;

@@ -1,22 +1,5 @@
 const Tour = require('../models/tourModel'); // импортируем модель
 
-// Middleware для проверки наличия обязательных полей в теле запроса
-// Применяется только к POST-запросу при создании тура
-const checkBody = (req, res, next) => {
-  const { name, price } = req.body;
-
-  // Проверяем, есть ли name и price в теле запроса
-  if (!name || !price) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Request must contain "name" and "price"'
-    });
-  }
-
-  // Если всё в порядке — передаём управление дальше
-  next();
-};
-
 // --- получить все туры --- //
 const getAllTours = (req, res) => {
   res.status(200).json({
@@ -50,13 +33,26 @@ const getTour = (req, res) => {
 };
 
 // --- создать новый тур --- //
-const createTour = (req, res) => {
-  res.status(201).json({
-    status: 'success'
-    // data: {
-    //   tours: newTour
-    // }
-  });
+const createTour = async (req, res) => {
+  try {
+    //   const newTour = new Tour({});
+    //   newTour.save();
+
+    // более лаконичный вариант
+    const newTour = await Tour.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tours: newTour
+      }
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data sent!'
+    });
+  }
 };
 
 // --- обновить конкретный тур --- //
@@ -90,6 +86,5 @@ module.exports = {
   getTour,
   createTour,
   updateTour,
-  deleteTour,
-  checkBody
+  deleteTour
 };

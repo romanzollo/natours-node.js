@@ -1,14 +1,14 @@
 // Импортируем библиотеку mongoose
 const mongoose = require('mongoose');
 
-// Определяем схему модели
+// Определяем схему модели тура (структуру и правила для документа тура)
 const tourSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: [true, 'Tour must have a name'],
       unique: true,
-      trim: true, // полезно для строк
+      trim: true, // автоматически удаляет пробелы в начале и конце строки
       maxlength: [100, 'Name cannot exceed 100 characters']
     },
     rating: {
@@ -29,6 +29,6 @@ const tourSchema = new mongoose.Schema(
 );
 
 // Создаем модель
-const Tour = mongoose.model('Tour', tourSchema);
+const Tour = mongoose.model('Tour', tourSchema); // mongoose автоматически преобразует имя 'Tour' в нижний регистр и множественное число: коллекция в MongoDB будет называться tours
 
 module.exports = Tour;

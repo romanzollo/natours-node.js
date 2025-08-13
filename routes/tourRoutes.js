@@ -8,7 +8,6 @@ const {
   createTour,
   updateTour,
   deleteTour,
-  checkID,
   checkBody
 } = require('./../controllers/tourController');
 
@@ -19,7 +18,7 @@ const router = express.Router();
 // каждый раз, когда в URL встречается указанный параметр (в данном случае — 'id')
 // Здесь: при любом запросе с :id (например, /api/v1/tours/5) сначала вызывается checkID
 // Это удобно для проверки валидности ID, логирования или предварительной загрузки данных
-router.param('id', checkID);
+// router.param('id', checkID);
 
 // Определяем маршруты
 router

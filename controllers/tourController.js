@@ -86,19 +86,31 @@ const updateTour = async (req, res) => {
 };
 
 // --- удалить конкретный тур --- //
-const deleteTour = (req, res) => {
-  // проверяем на наличие тура
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
+const deleteTour = async (req, res) => {
+  try {
+    const deleted = await Tour.findByIdAndDelete(req.params.id);
+
+    // Если тур не найден, возвращаем ошибку 404
+    if (!deleted) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Tour not found'
+      });
+    }
+
+    // Успешное удаление: статус 204 (No Content)
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (error) {
+    // Обработка ошибок (например, некорректный ID)
+    res.status(500).json({
       status: 'fail',
-      message: 'Invalid ID'
+      message: 'Server error',
+      error: error.message
     });
   }
-
-  res.status(204).json({
-    status: 'success',
-    data: null
-  });
 };
 
 module.exports = {

@@ -1,35 +1,43 @@
 const Tour = require('../models/tourModel'); // импортируем модель
 
 // --- получить все туры --- //
-const getAllTours = (req, res) => {
-  res.status(200).json({
-    status: 'success'
-    // results: tours.length,
-    // data: {
-    //   tours
-    // }
-  });
+const getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours
+      }
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 // --- получить конкретный тур --- //
-const getTour = (req, res) => {
-  const id = req.params.id * 1; // * 1 — чтобы преобразовать строку в число
-  //   const tour = tours.find(el => el.id === id);
+const getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+    // const tour = Tour.findOne({ _id: req.params.id }); - другой вариант
 
-  //   // проверяем на наличие тура
-  //   if (!tour) {
-  //     return res.status(404).json({
-  //       status: 'fail',
-  //       message: 'Invalid ID'
-  //     });
-  //   }
-
-  //   res.status(200).json({
-  //     status: 'success',
-  //     data: {
-  //       tour
-  //     }
-  //   });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 // --- создать новый тур --- //
@@ -56,13 +64,25 @@ const createTour = async (req, res) => {
 };
 
 // --- обновить конкретный тур --- //
-const updateTour = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated tour here...>'
-    }
-  });
+const updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // возвращает обновлённый документ
+      runValidators: true // запускает валидацию по схеме
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour
+      }
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: 'fail',
+      message: error
+    });
+  }
 };
 
 // --- удалить конкретный тур --- //

@@ -11,16 +11,59 @@ const tourSchema = new mongoose.Schema(
       trim: true, // автоматически удаляет пробелы в начале и конце строки
       maxlength: [100, 'Name cannot exceed 100 characters']
     },
-    rating: {
+    duration: {
       type: Number,
-      default: 4.5,
-      min: [1, 'Rating must be at least 1.0'],
-      max: [5, 'Rating cannot exceed 5.0']
+      required: [true, 'A tour must have a duration']
+    },
+    difficulty: {
+      type: String,
+      required: [true, 'A tour must have a difficulty']
+      //   enum: {
+      //     values: ['easy', 'medium', 'difficult'],
+      //     message: 'Difficulty is either: easy, medium, difficult'
+      //   }
+    },
+    maxGroupSize: {
+      type: Number,
+      required: [true, 'A tour must have a group size']
+    },
+    ratingsAverage: {
+      type: Number,
+      default: 4.5
+    },
+    ratingsQuantity: {
+      type: Number,
+      default: 0
     },
     price: {
       type: Number,
       required: [true, 'Tour must have a price'],
       min: [0, 'Price cannot be negative']
+    },
+    priceDiscount: Number,
+    summary: {
+      type: String,
+      trim: true
+    },
+    description: {
+      type: String,
+      trim: true,
+      required: [true, 'A tour must have a description']
+    },
+    imageCover: {
+      type: String,
+      required: [true, 'A tour must have a cover image']
+    },
+    images: [String],
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      select: false // не будет возвращаться в ответе
+    },
+    startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false
     }
   },
   {

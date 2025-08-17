@@ -3,22 +3,27 @@ const Tour = require('../models/tourModel'); // импортируем моде�
 // --- получить все туры --- //
 const getAllTours = async (req, res) => {
   try {
-    // СОЗДАЕМ ЗАПРОС
-    const queryObj = { ...req.query }; // клонируем объект
-    const excludedFields = ['page', 'sort', 'limit', 'fields']; // поля для исключения
-    excludedFields.forEach(el => delete queryObj[el]); // удаляем поля
+    // ПРЕДОБРАБОТКА ЗАПРОСА
+    // 1) Клонируем объект запроса
+    let queryObj = { ...req.query };
 
-    console.log(req.query, queryObj);
+    // 2) Исключаем специальные поля
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach(el => delete queryObj[el]);
 
-    const query = Tour.find(queryObj); // применяем сортировку
+    // 3) Преобразуем gte, gt, lte, lt в $gte, $gt, $lte, $lt
+    const queryStr = JSON.stringify(queryObj).replace(
+      /\b(gte|gt|lte|lt)\b/g,
+      match => `$${match}`
+    );
 
-    // const query = await Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
+    // 4) Парсим обратно в объект
+    const finalQueryObj = JSON.parse(queryStr);
 
-    // ВЫПОЛНЯЕМ ЗАПРОС
+    console.log('Transformed query:', finalQueryObj);
+
+    // 5) Выполняем запрос
+    const query = Tour.find(finalQueryObj);
     const tours = await query;
 
     // ОТПРАВЛЯЕМ ОТВЕТ
@@ -32,7 +37,7 @@ const getAllTours = async (req, res) => {
   } catch (error) {
     res.status(404).json({
       status: 'fail',
-      message: error
+      message: error.message
     });
   }
 };

@@ -1,6 +1,7 @@
 const express = require('express');
 // Подключаем библиотеку morgan — логгер HTTP-запросов (для отладки)
 const morgan = require('morgan');
+const qs = require('qs'); // для парсинга строки запроса
 
 // Импортируем маршруты для туров из внешнего файла
 const tourRouter = require('./routes/tourRoutes');
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 // Встроенный middleware: парсит тело входящих запросов из JSON в объект req.body
 // Теперь мы можем получать данные из POST/PATCH и других запросов с JSON
 app.use(express.json());
+app.set('query parser', str => qs.parse(str, { depth: 10 })); // для парсинга строки запроса
 
 app.use(express.static(`${__dirname}/public`));
 

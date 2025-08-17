@@ -3,8 +3,25 @@ const Tour = require('../models/tourModel'); // импортируем моде�
 // --- получить все туры --- //
 const getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // СОЗДАЕМ ЗАПРОС
+    const queryObj = { ...req.query }; // клонируем объект
+    const excludedFields = ['page', 'sort', 'limit', 'fields']; // поля для исключения
+    excludedFields.forEach(el => delete queryObj[el]); // удаляем поля
 
+    console.log(req.query, queryObj);
+
+    const query = Tour.find(queryObj); // применяем сортировку
+
+    // const query = await Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+
+    // ВЫПОЛНЯЕМ ЗАПРОС
+    const tours = await query;
+
+    // ОТПРАВЛЯЕМ ОТВЕТ
     res.status(200).json({
       status: 'success',
       results: tours.length,

@@ -58,7 +58,7 @@ const tourSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      select: false // не будет возвращаться в ответе
+      select: false // false - поле не будет возвращаться в ответе
     },
     startDates: [Date],
     secretTour: {

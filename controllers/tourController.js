@@ -3,7 +3,9 @@ const Tour = require('../models/tourModel'); // импортируем моде�
 // --- получить все туры --- //
 const getAllTours = async (req, res) => {
   try {
-    // ПРЕДОБРАБОТКА ЗАПРОСА
+    console.log(req.query);
+
+    // ПРЕДОБРАБОТКА ЗАПРОСА (формируем запрос)
     // 1) Клонируем объект запроса
     let queryObj = { ...req.query };
 
@@ -20,10 +22,18 @@ const getAllTours = async (req, res) => {
     // 4) Парсим обратно в объект
     const finalQueryObj = JSON.parse(queryStr);
 
-    console.log('Transformed query:', finalQueryObj);
+    // 5) Передаем запрос
+    let query = Tour.find(finalQueryObj);
 
-    // 5) Выполняем запрос
-    const query = Tour.find(finalQueryObj);
+    // СОРТИРОВКА
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy); // sort - встроенный метод в mongoose
+    } else {
+      query = query.sort('-createdAt'); // по умолчанию сортируем по дате создания
+    }
+
+    // ВЫПОЛНЯЕМ ЗАПРОС
     const tours = await query;
 
     // ОТПРАВЛЯЕМ ОТВЕТ

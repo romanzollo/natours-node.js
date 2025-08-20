@@ -5,7 +5,7 @@ const getAllTours = async (req, res) => {
   try {
     console.log(req.query);
 
-    // ПРЕДОБРАБОТКА ЗАПРОСА (формируем запрос)
+    // --- ПРЕДОБРАБОТКА ЗАПРОСА (формируем запрос) --- //
     // 1) Клонируем объект запроса
     let queryObj = { ...req.query };
 
@@ -25,12 +25,20 @@ const getAllTours = async (req, res) => {
     // 5) Передаем запрос
     let query = Tour.find(finalQueryObj);
 
-    // СОРТИРОВКА
+    // --- СОРТИРОВКА --- //
     if (req.query.sort) {
       const sortBy = req.query.sort.split(',').join(' ');
       query = query.sort(sortBy); // sort - встроенный метод в mongoose
     } else {
       query = query.sort('-createdAt'); // по умолчанию сортируем по дате создания
+    }
+
+    // --- ОГРАНИЧЕНИЕ ПОЛЕЙ --- //
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
     }
 
     // ВЫПОЛНЯЕМ ЗАПРОС

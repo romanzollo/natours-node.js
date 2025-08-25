@@ -1,69 +1,84 @@
 const Tour = require('../models/tourModel'); // импортируем модель
 
+// ==================== MIDDLEWARE ====================
+// middleware для получения 5 самых дешевых/популярных туров
+// ⚠️ В Express 5 req.query нельзя мутировать напрямую,
+// поэтому складываем "виртуальные параметры" в req.aliasQuery
+const aliasTopTours = (req, res, next) => {
+  req.aliasQuery = {
+    limit: '5', // лимитируем кол-во документов
+    sort: '-ratingsAverage,price', // сортировка по рейтингу и цене
+    fields: 'name,price,ratingsAverage,summary,difficulty' // только нужные поля
+  };
+
+  next();
+};
+
+// ==================== КОНТРОЛЛЕРЫ ====================
+
 // --- получить все туры --- //
 const getAllTours = async (req, res) => {
   try {
-    console.log(req.query);
+    // Берём aliasQuery (если задан в middleware) или реальные query из запроса
+    const qp = req.aliasQuery ?? req.query;
+    console.log('Effective QUERY:', qp);
 
-    // --- ПРЕДОБРАБОТКА ЗАПРОСА (формируем запрос) --- //
-    // 1) Клонируем объект запроса
-    let queryObj = { ...req.query };
+    // --- ПРЕДОБРАБОТКА ЗАПРОСА (фильтры) --- //
+    let queryObj = { ...qp };
 
-    // 2) Исключаем специальные поля
+    // Исключаем служебные поля, которые не относятся к фильтрации
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach(el => delete queryObj[el]);
 
-    // 3) Преобразуем gte, gt, lte, lt в $gte, $gt, $lte, $lt
+    // Преобразуем gte, gt, lte, lt → $gte, $gt, $lte, $lt
     const queryStr = JSON.stringify(queryObj).replace(
       /\b(gte|gt|lte|lt)\b/g,
       match => `$${match}`
     );
 
-    // 4) Парсим обратно в объект
-    const finalQueryObj = JSON.parse(queryStr);
+    // Преобразуем JSON в объект
+    const finalFilter = JSON.parse(queryStr);
 
-    // 5) Передаем запрос
-    let query = Tour.find(finalQueryObj);
+    // Базовый запрос
+    let query = Tour.find(finalFilter);
 
     // --- СОРТИРОВКА --- //
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy); // sort - встроенный метод в mongoose
+    if (qp.sort) {
+      const sortBy = qp.sort.split(',').join(' ');
+      query = query.sort(sortBy);
     } else {
-      query = query.sort('-createdAt'); // по умолчанию сортируем по дате создания
+      query = query.sort('-createdAt');
     }
 
     // --- ОГРАНИЧЕНИЕ ПОЛЕЙ --- //
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
+    if (qp.fields) {
+      const fields = qp.fields.split(',').join(' ');
       query = query.select(fields);
     } else {
-      query = query.select('-__v');
+      query = query.select('-__v'); // по умолчанию убираем служебное поле __v
     }
 
     // --- ПАГИНАЦИЯ --- //
-    const page = Number(req.query.page) || 1; // по умолчанию первая страница
-    const limit = Number(req.query.limit) || 10; // по умолчанию 10 документов на странице
-    const skip = (page - 1) * limit; // сдвигаемся на 1 страницу и умножаем на количество документов на странице
+    const page = qp.page ? Number(qp.page) : 1;
+    const limit = qp.limit ? Number(qp.limit) : 10;
+    const skip = (page - 1) * limit;
 
-    // page=2&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3, ...
-    query = query.skip(skip).limit(limit); // skip - встроенный метод в mongoose
+    query = query.skip(skip).limit(limit);
 
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments(); // countDocuments - встроенный метод в mongoose
+    if (qp.page) {
+      // считаем количество документов с учётом фильтра
+      const numTours = await Tour.countDocuments(finalFilter);
       if (skip >= numTours) throw new Error('This page does not exist');
     }
 
-    // ВЫПОЛНЯЕМ ЗАПРОС
+    // --- ВЫПОЛНЯЕМ ЗАПРОС --- //
     const tours = await query;
 
-    // ОТПРАВЛЯЕМ ОТВЕТ
+    // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
     res.status(200).json({
       status: 'success',
       results: tours.length,
-      data: {
-        tours
-      }
+      data: { tours }
     });
   } catch (error) {
     res.status(404).json({
@@ -77,13 +92,10 @@ const getAllTours = async (req, res) => {
 const getTour = async (req, res) => {
   try {
     const tour = await Tour.findById(req.params.id);
-    // const tour = Tour.findOne({ _id: req.params.id }); - другой вариант
 
     res.status(200).json({
       status: 'success',
-      data: {
-        tour
-      }
+      data: { tour }
     });
   } catch (error) {
     res.status(404).json({
@@ -96,17 +108,11 @@ const getTour = async (req, res) => {
 // --- создать новый тур --- //
 const createTour = async (req, res) => {
   try {
-    //   const newTour = new Tour({});
-    //   newTour.save();
-
-    // более лаконичный вариант
     const newTour = await Tour.create(req.body);
 
     res.status(201).json({
       status: 'success',
-      data: {
-        tours: newTour
-      }
+      data: { tours: newTour }
     });
   } catch (error) {
     res.status(400).json({
@@ -120,15 +126,13 @@ const createTour = async (req, res) => {
 const updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, // возвращает обновлённый документ
-      runValidators: true // запускает валидацию по схеме
+      new: true, // вернуть обновлённый документ
+      runValidators: true // запускать валидацию схемы
     });
 
     res.status(200).json({
       status: 'success',
-      data: {
-        tour
-      }
+      data: { tour }
     });
   } catch (error) {
     res.status(404).json({
@@ -143,7 +147,6 @@ const deleteTour = async (req, res) => {
   try {
     const deleted = await Tour.findByIdAndDelete(req.params.id);
 
-    // Если тур не найден, возвращаем ошибку 404
     if (!deleted) {
       return res.status(404).json({
         status: 'fail',
@@ -151,13 +154,11 @@ const deleteTour = async (req, res) => {
       });
     }
 
-    // Успешное удаление: статус 204 (No Content)
     res.status(204).json({
       status: 'success',
       data: null
     });
   } catch (error) {
-    // Обработка ошибок (например, некорректный ID)
     res.status(500).json({
       status: 'fail',
       message: 'Server error',
@@ -171,5 +172,6 @@ module.exports = {
   getTour,
   createTour,
   updateTour,
-  deleteTour
+  deleteTour,
+  aliasTopTours
 };

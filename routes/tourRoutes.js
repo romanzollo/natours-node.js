@@ -7,7 +7,8 @@ const {
   getTour,
   createTour,
   updateTour,
-  deleteTour
+  deleteTour,
+  aliasTopTours
 } = require('./../controllers/tourController');
 
 // Создаём экземпляр маршрутизатора Express
@@ -15,19 +16,23 @@ const router = express.Router();
 
 // Метод router.param() позволяет задать middleware, который будет выполняться
 // каждый раз, когда в URL встречается указанный параметр (в данном случае — 'id')
-// Здесь: при любом запросе с :id (например, /api/v1/tours/5) сначала вызывается checkID
-// Это удобно для проверки валидности ID, логирования или предварительной загрузки данных
 // router.param('id', checkID);
 
-// Определяем маршруты
+// ==================== СПЕЦИАЛЬНЫЕ РОУТЫ ====================
+// aliasTopTours - middleware, который заранее «подставляет» limit/sort/fields,
+// чтобы дальше getAllTours работал так, как будто юзер сам передал эти query-параметры
+router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
+
+// ==================== СТАНДАРТНЫЕ РОУТЫ ====================
 router
   .route('/')
-  .get(getAllTours)
-  .post(createTour);
+  .get(getAllTours)    // получить все туры
+  .post(createTour);   // создать новый тур
+
 router
   .route('/:id')
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+  .get(getTour)        // получить тур по id
+  .patch(updateTour)   // обновить тур
+  .delete(deleteTour); // удалить тур
 
 module.exports = router;

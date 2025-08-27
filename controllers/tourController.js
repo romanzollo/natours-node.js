@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel'); // импортируем модель
+const APIFeatures = require('../utils/apiFeatures');
 
 // ==================== MIDDLEWARE ====================
 // middleware для получения 5 самых дешевых/популярных туров
@@ -19,60 +20,21 @@ const aliasTopTours = (req, res, next) => {
 // --- получить все туры --- //
 const getAllTours = async (req, res) => {
   try {
-    // Берём aliasQuery (если задан в middleware) или реальные query из запроса
-    const qp = req.aliasQuery ?? req.query;
-    console.log('Effective QUERY:', qp);
-
-    // --- ПРЕДОБРАБОТКА ЗАПРОСА (фильтры) --- //
-    let queryObj = { ...qp };
-
-    // Исключаем служебные поля, которые не относятся к фильтрации
-    const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach(el => delete queryObj[el]);
-
-    // Преобразуем gte, gt, lte, lt → $gte, $gt, $lte, $lt
-    const queryStr = JSON.stringify(queryObj).replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      match => `$${match}`
-    );
-
-    // Преобразуем JSON в объект
-    const finalFilter = JSON.parse(queryStr);
-
-    // Базовый запрос
-    let query = Tour.find(finalFilter);
-
-    // --- СОРТИРОВКА --- //
-    if (qp.sort) {
-      const sortBy = qp.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-createdAt');
-    }
-
-    // --- ОГРАНИЧЕНИЕ ПОЛЕЙ --- //
-    if (qp.fields) {
-      const fields = qp.fields.split(',').join(' ');
-      query = query.select(fields);
-    } else {
-      query = query.select('-__v'); // по умолчанию убираем служебное поле __v
-    }
-
-    // --- ПАГИНАЦИЯ --- //
-    const page = qp.page ? Number(qp.page) : 1;
-    const limit = qp.limit ? Number(qp.limit) : 10;
-    const skip = (page - 1) * limit;
-
-    query = query.skip(skip).limit(limit);
-
-    if (qp.page) {
-      // считаем количество документов с учётом фильтра
-      const numTours = await Tour.countDocuments(finalFilter);
-      if (skip >= numTours) throw new Error('This page does not exist');
-    }
-
     // --- ВЫПОЛНЯЕМ ЗАПРОС --- //
-    const tours = await query;
+    const features = new APIFeatures(
+      Tour.find(),
+      req.query,
+      req.aliasQuery // сюда подаём "виртуальные" параметры
+    )
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    // валидация страницы теперь тут
+    await features.validatePage(Tour);
+
+    const tours = await features.query;
 
     // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
     res.status(200).json({
@@ -100,7 +62,7 @@ const getTour = async (req, res) => {
   } catch (error) {
     res.status(404).json({
       status: 'fail',
-      message: error
+      message: error.message
     });
   }
 };
@@ -112,7 +74,8 @@ const createTour = async (req, res) => {
 
     res.status(201).json({
       status: 'success',
-      data: { tours: newTour }
+      //   data: { tours: newTour }
+      data: { tour: newTour }
     });
   } catch (error) {
     res.status(400).json({
@@ -137,7 +100,7 @@ const updateTour = async (req, res) => {
   } catch (error) {
     res.status(404).json({
       status: 'fail',
-      message: error
+      message: error.message
     });
   }
 };

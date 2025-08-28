@@ -130,11 +130,62 @@ const deleteTour = async (req, res) => {
   }
 };
 
+// --- получаем статистику по турам (agregation pipeline) --- //
+const getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      // 1) Отбираем только туры с рейтингом >= 4.5
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } }
+      },
+      // 2) Группируем по сложности тура (difficulty)
+      {
+        $group: {
+          // _id — это ключ группировки. Здесь переводим difficulty в верхний регистр
+          _id: { $toUpper: '$difficulty' },
+          // считаем количество туров в каждой группе
+          numTours: { $sum: 1 },
+          // считаем общее количество рейтингов
+          numRatings: { $sum: '$ratingsQuantity' },
+          // средний рейтинг туров
+          avgRating: { $avg: '$ratingsAverage' },
+          // средняя цена
+          avgPrice: { $avg: '$price' },
+          // минимальная цена
+          minPrice: { $min: '$price' },
+          // максимальная цена
+          maxPrice: { $max: '$price' }
+        }
+      },
+      // 3) Сортируем группы по средней цене (возрастание)
+      {
+        $sort: { avgPrice: 1 }
+      }
+    ]);
+
+    // Отправляем успешный ответ с полученной статистикой
+    res.status(200).json({
+      status: 'success',
+      data: { stats }
+    });
+  } catch (error) {
+    // Обрабатываем ошибку и отправляем ответ с кодом 500
+    res.status(500).json({
+      status: 'fail',
+      message: 'Server error',
+      error: error.message
+    });
+  }
+};
+
+// ==================== ЭКСПОРТ ====================
+
 module.exports = {
   getAllTours,
   getTour,
   createTour,
   updateTour,
   deleteTour,
-  aliasTopTours
+  aliasTopTours,
+  getTourStats
 };

@@ -8,7 +8,8 @@ const {
   createTour,
   updateTour,
   deleteTour,
-  aliasTopTours
+  aliasTopTours,
+  getTourStats
 } = require('./../controllers/tourController');
 
 // Создаём экземпляр маршрутизатора Express
@@ -23,16 +24,18 @@ const router = express.Router();
 // чтобы дальше getAllTours работал так, как будто юзер сам передал эти query-параметры
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 
+router.route('/tour-stats').get(getTourStats);
+
 // ==================== СТАНДАРТНЫЕ РОУТЫ ====================
 router
   .route('/')
-  .get(getAllTours)    // получить все туры
-  .post(createTour);   // создать новый тур
+  .get(getAllTours) // получить все туры
+  .post(createTour); // создать новый тур
 
 router
   .route('/:id')
-  .get(getTour)        // получить тур по id
-  .patch(updateTour)   // обновить тур
+  .get(getTour) // получить тур по id
+  .patch(updateTour) // обновить тур
   .delete(deleteTour); // удалить тур
 
 module.exports = router;

@@ -1,0 +1,27 @@
+# ----------------------------------------------------
+# Commit message convention (Conventional Commits)
+# Format: <type>(<scope>): <short summary>
+# ----------------------------------------------------
+# Types:
+#   feat     – new feature
+#   fix      – bug fix
+#   refactor – code refactoring (no behavior change)
+#   chore    – config, build, deps
+#   docs     – documentation / comments
+#   style    – formatting, lint, prettier
+#   test     – adding or updating tests
+#
+# Scopes (examples for your project):
+#   api, routes, controller, model, db, auth, tours, users, stats
+#
+# Example:
+#   feat(controller): add getMonthlyPlan aggregation
+#   fix(model): correct price validation in Tour schema
+#
+# ----------------------------------------------------
+
+<type>(<scope>): <short summary>
+
+# Optional body (why change was made, details, notes)
+# 
+# BREAKING CHANGE: describe breaking API change here

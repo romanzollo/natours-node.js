@@ -67,9 +67,16 @@ const tourSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true // опционально: добавляет createdAt и updatedAt
+    timestamps: true, // опционально: добавляет createdAt и updatedAt
+    toJSON: { virtuals: true }, // опционально: включает виртуальные поля
+    toObject: { virtuals: true }
   }
 );
+
+// Виртуальное поле
+tourSchema.virtual('durationWeeks').get(function() {
+  return this.duration / 7;
+});
 
 // Создаем модель
 const Tour = mongoose.model('Tour', tourSchema); // mongoose автоматически преобразует имя 'Tour' в нижний регистр и множественное число: коллекция в MongoDB будет называться tours

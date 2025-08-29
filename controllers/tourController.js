@@ -178,6 +178,61 @@ const getTourStats = async (req, res) => {
   }
 };
 
+// --- получаем статистику по турам по месяцам (agregation pipeline) --- //
+const getMonthlyPlan = async (req, res) => {
+  try {
+    const year = Number(req.params.year); // 2021
+
+    const plan = await Tour.aggregate([
+      {
+        $unwind: '$startDates' // разворачиваем массив
+      },
+      {
+        $match: {
+          startDates: {
+            $gte: new Date(`${year}-01-01`),
+            $lte: new Date(`${year}-12-31`)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { $month: '$startDates' }, // _id — это ключ группировки
+          numTourStarts: { $sum: 1 }, // считаем количество туров в каждой группе
+          tours: { $push: '$name' } // добавляем название тура в массив
+        }
+      },
+      {
+        $addFields: { month: '$_id' } // добавляем поле month для удобства
+      },
+      {
+        $project: {
+          _id: 0 // удаляем поле _id
+        }
+      },
+      {
+        $sort: { numTourStarts: -1 } // сортируем по количеству туров в порядке убывания
+      },
+      {
+        $limit: 12 // ограничиваем количество документов если нужно
+      }
+    ]);
+
+    // Отправляем успешный ответ с полученной статистикой
+    res.status(200).json({
+      status: 'success',
+      data: { plan }
+    });
+  } catch (error) {
+    // Обрабатываем ошибку и отправляем ответ с кодом 500
+    res.status(500).json({
+      status: 'fail',
+      message: 'Server error',
+      error: error.message
+    });
+  }
+};
+
 // ==================== ЭКСПОРТ ====================
 
 module.exports = {
@@ -187,5 +242,6 @@ module.exports = {
   updateTour,
   deleteTour,
   aliasTopTours,
-  getTourStats
+  getTourStats,
+  getMonthlyPlan
 };

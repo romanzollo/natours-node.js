@@ -9,7 +9,8 @@ const {
   updateTour,
   deleteTour,
   aliasTopTours,
-  getTourStats
+  getTourStats,
+  getMonthlyPlan
 } = require('./../controllers/tourController');
 
 // Создаём экземпляр маршрутизатора Express
@@ -22,9 +23,10 @@ const router = express.Router();
 // ==================== СПЕЦИАЛЬНЫЕ РОУТЫ ====================
 // aliasTopTours - middleware, который заранее «подставляет» limit/sort/fields,
 // чтобы дальше getAllTours работал так, как будто юзер сам передал эти query-параметры
-router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
+router.route('/top-5-cheap').get(aliasTopTours, getAllTours); // получить 5 самых дешевых туров
 
-router.route('/tour-stats').get(getTourStats);
+router.route('/tour-stats').get(getTourStats); // получить статистику по турам
+router.route('/monthly-plan/:year').get(getMonthlyPlan); // получить план по месяцам
 
 // ==================== СТАНДАРТНЫЕ РОУТЫ ====================
 router

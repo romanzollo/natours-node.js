@@ -1,5 +1,5 @@
-// Импортируем библиотеку mongoose
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // Импортируем библиотеку mongoose
+const slugify = require('slugify'); // Импортируем библиотеку slugify
 
 // Определяем схему модели тура (структуру и правила для документа тура)
 const tourSchema = new mongoose.Schema(
@@ -11,6 +11,7 @@ const tourSchema = new mongoose.Schema(
       trim: true, // автоматически удаляет пробелы в начале и конце строки
       maxlength: [100, 'Name cannot exceed 100 characters']
     },
+    slug: String,
     duration: {
       type: Number,
       required: [true, 'A tour must have a duration']
@@ -76,6 +77,13 @@ const tourSchema = new mongoose.Schema(
 // Виртуальное поле
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
+});
+
+// middleware документа: срабатует перед сохранением и созданием (только .save() и .create()) (в insertMany() не сработает)
+tourSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, { lower: true }); // добавляем slug
+
+  next();
 });
 
 // Создаем модель

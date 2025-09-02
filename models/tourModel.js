@@ -94,6 +94,15 @@ tourSchema.pre(/^find/, function(next) {
   next();
 });
 
+// aggregation middleware
+tourSchema.pre('aggregate', function(next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); // добавляем фильтр $match
+
+  next();
+});
+
+// ------------------------------- //
+
 // Создаем модель
 const Tour = mongoose.model('Tour', tourSchema); // mongoose автоматически преобразует имя 'Tour' в нижний регистр и множественное число: коллекция в MongoDB будет называться tours
 

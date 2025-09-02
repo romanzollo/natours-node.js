@@ -79,9 +79,17 @@ tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
 
+// --- MONGOOSE MIDDLEWARES --- //
 // middleware документа: срабатует перед сохранением и созданием (только .save() и .create()) (в insertMany() не сработает)
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true }); // добавляем slug
+
+  next();
+});
+
+// middleware запроса
+tourSchema.pre(/^find/, function(next) {
+  this.find({ secretTour: { $ne: true } });
 
   next();
 });

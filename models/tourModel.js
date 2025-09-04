@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'); // Импортируем библиотеку mongoose
-const slugify = require('slugify'); // Импортируем библиотеку slugify
+const slugify = require('slugify'); // библиотека для генерации slug
+const validator = require('validator'); // библиотека для кастомных валидаций
 
 // Определяем схему модели тура (структуру и правила для документа тура)
 const tourSchema = new mongoose.Schema(
@@ -11,6 +12,7 @@ const tourSchema = new mongoose.Schema(
       trim: true, // автоматически удаляет пробелы в начале и конце строки
       maxlength: [40, 'A tour name must have less or equal then 40 characters'],
       minlength: [10, 'A tour name must have more or equal then 10 characters']
+      //   validate: [validator.isAlpha, 'Tour name must only contain characters'] // проверка на наличие только букв
     },
     slug: String,
     duration: {
@@ -45,7 +47,16 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'Tour must have a price'],
       min: [0, 'Price cannot be negative']
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      validate: {
+        validator: function(value) {
+          // this будет работать только при создании нового документа (при обновлении документа this будет undefined)
+          return value < this.price;
+        },
+        message: 'Discount price ({VALUE}) should be below regular price'
+      }
+    },
     summary: {
       type: String,
       trim: true

@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon server.js",
+    "dev:debug": "nodemon --inspect=9230 server.js",
     "prod": "cross-env NODE_ENV=production nodemon server.js"
   },
   "author": "Roman",

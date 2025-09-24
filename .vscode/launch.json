@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node", // Тип отладчика (Node.js)
+      "request": "launch", // Режим запуска (стартуем процесс под отладчиком)
+      "name": "Dev: nodemon (inspect 9230)", // Отображаемое имя конфигурации
+      "runtimeExecutable": "nodemon", // Чем запускать приложение: nodemon перезапускает сервер при изменениях файлов
+      "runtimeArgs": ["--inspect=9230"], // включаем инспектор на конкретном порту 9230, явный порт снижает конфликты со стандартным 9229
+      "program": "${workspaceFolder}/server.js", // Точка входа приложения (мой сервер)
+      "console": "integratedTerminal", // Где показывать ввод/вывод процесса
+      "internalConsoleOptions": "neverOpen", // Не открывать внутреннюю консоль VS Code
+      "restart": true, // Автоматически переподключаться после перезапуска процесса (актуально для nodemon)
+      "autoAttachChildProcesses": true, // Автоматически подключаться к дочерним процессам (полезно, если что-то форкается)
+      "smartStep": false, // Отключаем smartStep для более предсказуемой отладки async/await и локальных переменных
+      "skipFiles": ["<node_internals>/**"], // Пропускаем внутренности Node.js в стеке для чистоты
+      "env": {
+        "NODE_ENV": "development" // Переменные окружения для dev-режима
+      },
+      "envFile": "${workspaceFolder}/.env" // Подхватывать переменные из .env (если используете dotenv и т.п.)
+    }
+  ]
+}

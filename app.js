@@ -7,6 +7,10 @@ const qs = require('qs'); // для парсинга строки запроса
 const tourRouter = require('./routes/tourRoutes');
 // Импортируем маршруты для пользователей из внешнего файла
 const userRouter = require('./routes/userRoutes');
+// Импортируем модуль для работы с ошибками
+const AppError = require('./utils/appError');
+// Импортируем глобальный обработчик ошибок
+const errorHandler = require('./middlewares/errorHandler');
 
 // Создаём экземпляр приложения Express
 const app = express();
@@ -43,13 +47,12 @@ app.use('/api/v1/tours', tourRouter);
 // Например: GET /api/v1/users, DELETE /api/v1/users/5
 app.use('/api/v1/users', userRouter);
 
-// Маршрут для несуществующих маршрутов
-// /(.*)/ - любой маршрут (так как Express 5 перешёл на router 2.0 и path-to-regexp 8.0)
-app.all(/(.*)/, (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: `Can't find ${req.originalUrl} on this server!`
-  });
+// Обработчик несуществующих маршрутов (404)
+app.use((req, res, next) => {
+  next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));
 });
+
+// Глобальный обработчик ошибок (обязательно последним)
+app.use(errorHandler);
 
 module.exports = app;

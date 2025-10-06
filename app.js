@@ -26,7 +26,16 @@ if (process.env.NODE_ENV === 'development') {
 // Встроенный middleware: парсит тело входящих запросов из JSON в объект req.body
 // Теперь мы можем получать данные из POST/PATCH и других запросов с JSON
 app.use(express.json());
-app.set('query parser', str => qs.parse(str, { depth: 10 })); // для парсинга строки запроса
+
+// Безопасный парсинг строки запроса с ограничениями глубины/кол-ва параметров
+app.set('query parser', str =>
+  qs.parse(str, {
+    depth: 10, // ограничиваем вложенность
+    parameterLimit: 1000, // ограничиваем кол-во параметров
+    strictDepth: true, // бросаем ошибку при превышении глубины
+    allowPrototypes: false // не трогаем прототипы объектов
+  })
+);
 
 app.use(express.static(`${__dirname}/public`));
 
@@ -47,7 +56,7 @@ app.use('/api/v1/tours', tourRouter);
 // Например: GET /api/v1/users, DELETE /api/v1/users/5
 app.use('/api/v1/users', userRouter);
 
-// Обработчик несуществующих маршрутов (404)
+// 404: в конец, до глобального обработчика
 app.use((req, res, next) => {
   next(new AppError(404, `Can't find ${req.originalUrl} on this server!`));
 });

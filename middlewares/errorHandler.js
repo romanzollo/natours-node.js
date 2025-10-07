@@ -1,14 +1,20 @@
-// middlewares/errorHandler.js
+const AppError = require('../utils/appError');
+
+const handleCastErrorDB = err => {
+  const message = `Invalid ${err.path}: ${err.value}.`;
+  return new AppError(400, message);
+};
 
 const sendErrorDev = (err, res, code, status) => {
   res.status(code).json({
     status,
     message: err.message || 'Internal Server Error',
-    error: {
-      name: err.name,
-      code: err.code,
-      details: err.details
-    },
+    // error: {
+    //   name: err.name,
+    //   code: err.code,
+    //   details: err.details
+    // },
+    error: err,
     stack: err.stack
   });
 };
@@ -60,7 +66,22 @@ module.exports = (err, req, res, next) => {
   // в dev: возвращаем подробный JSON через sendErrorDev — удобно для отладки.
   if (env === 'development') {
     return sendErrorDev(err, res, normalizedCode, status);
+  } else if (env === 'production') {
+    // Тщательно копируем ошибку, сохраняя прототип и message/name
+    let error = Object.create(Object.getPrototypeOf(err));
+    Object.assign(error, err);
+
+    // Каст-ошибка => 400
+    if (error?.name === 'CastError') error = handleCastErrorDB(error);
+    // else if (error?.code === 11000) error = handleDuplicateKeyDB(error);
+
+    // Единообразно получаем финальный код/статус
+    const code = Number.isInteger(error.statusCode)
+      ? error.statusCode
+      : normalizedCode;
+    const status = String(code).startsWith('4') ? 'fail' : 'error';
+
+    // в  prod: возвращаем безопасный JSON через sendErrorProd — не раскрываем стек и внутренности.
+    return sendErrorProd(error, res, code, status);
   }
-  // в  prod: возвращаем безопасный JSON через sendErrorProd — не раскрываем стек и внутренности.
-  return sendErrorProd(err, res, normalizedCode, status);
 };

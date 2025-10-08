@@ -1,7 +1,22 @@
 const AppError = require('../utils/appError');
 
+const handleDuplicateFieldsDB = err => {
+  // MongoServerError 11000: берем поле и значение из драйвера
+  const field = err?.keyPattern ? Object.keys(err.keyPattern)[0] : 'field';
+  const value = err?.keyValue ? err.keyValue[field] : undefined;
+  const message =
+    value !== undefined
+      ? `Duplicate field value: ${JSON.stringify(
+          value
+        )}. Please use another value!`
+      : 'Duplicate field value. Please use another value!';
+
+  return new AppError(400, message);
+};
+
 const handleCastErrorDB = err => {
   const message = `Invalid ${err.path}: ${err.value}.`;
+
   return new AppError(400, message);
 };
 
@@ -73,7 +88,7 @@ module.exports = (err, req, res, next) => {
 
     // Каст-ошибка => 400
     if (error?.name === 'CastError') error = handleCastErrorDB(error);
-    // else if (error?.code === 11000) error = handleDuplicateKeyDB(error);
+    if (error?.code === 11000) error = handleDuplicateFieldsDB(error);
 
     // Единообразно получаем финальный код/статус
     const code = Number.isInteger(error.statusCode)

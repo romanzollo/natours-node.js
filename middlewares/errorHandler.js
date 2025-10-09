@@ -20,6 +20,13 @@ const handleCastErrorDB = err => {
   return new AppError(400, message);
 };
 
+const handleValidationErrorDB = err => {
+  const errors = Object.values(err.errors).map(el => el.message); // получаем массив с сообщениями
+  const messages = `Invalid input data. ${errors.join('. ')}`; // объединяем в строку
+
+  return new AppError(400, messages);
+};
+
 const sendErrorDev = (err, res, code, status) => {
   res.status(code).json({
     status,
@@ -89,6 +96,8 @@ module.exports = (err, req, res, next) => {
     // Каст-ошибка => 400
     if (error?.name === 'CastError') error = handleCastErrorDB(error);
     if (error?.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (error?.name === 'ValidationError')
+      error = handleValidationErrorDB(error);
 
     // Единообразно получаем финальный код/статус
     const code = Number.isInteger(error.statusCode)

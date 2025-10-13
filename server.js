@@ -62,7 +62,7 @@ const server = app.listen(port, () => {
 
 // ГЛОБАЛЬНЫЙ ОБРАБОТЧИК ОШИБОК - 2) Ловим промисы без catch (асинхронные отказы)
 process.on('unhandledRejection', async err => {
-  console.error('UNHANDLED REJECTION! Shutting down...', err);
+  console.error('UNHANDLED REJECTION! Shutting down...', err.name, err.message);
   // Сначала перестаём принимать новые соединения
   server.close(async () => {
     try {

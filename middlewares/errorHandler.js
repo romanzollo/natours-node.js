@@ -49,6 +49,8 @@ const sendErrorProd = (err, res, code, status) => {
       ? err.isOperational
       : String(code).startsWith('4');
 
+  console.log('ERROR 💥', `code: ${code}`);
+
   res.status(code).json({
     status,
     message: isOperational

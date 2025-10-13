@@ -95,7 +95,7 @@ tourSchema.virtual('durationWeeks').get(function() {
 });
 
 // --- MONGOOSE MIDDLEWARES --- //
-// middleware документа: срабатует перед сохранением и созданием (только .save() и .create()) (в insertMany() не сработает)
+// middleware документа: срабатывает перед сохранением и созданием (только .save() и .create()) (в insertMany() не сработает)
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true }); // добавляем slug
 

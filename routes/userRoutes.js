@@ -6,14 +6,24 @@ const {
   createUser,
   getUser,
   updateUser,
-  deleteUser,
+  deleteUser
 } = require('../controllers/userController');
+const { singup } = require('../controllers/authController');
 
 // Создаём экземпляр маршрутизатора Express
 const router = express.Router();
 
 // Определяем маршруты
-router.route('/').get(getAllUsers).post(createUser);
-router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+router
+  .route('/')
+  .get(getAllUsers)
+  .post(createUser);
+router
+  .route('/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
+
+router.post('/singup', singup);
 
 module.exports = router;

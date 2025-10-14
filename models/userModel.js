@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'); // Импортируем библиотеку mongoose
 const validator = require('validator'); // библиотека для кастомных валидаций
+const bcrypt = require('bcryptjs'); // библиотека для хеширования паролей
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,12 +29,24 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please confirm your password'],
     validate: {
+      // валидатор сработает только при SAVE и CREATE => User.Create(), User.Save() (при UPDATE уже работать не будет)!!!
       validator: function(el) {
         return el === this.password;
       },
-      message: 'Passwords are not the same'
+      message: 'Passwords are not the same!'
     }
   }
+});
+
+// --- MONGOOSE MIDDLEWARES --- //
+// middleware документа: срабатывает перед сохранением и созданием (только .save() и .create())
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 12); // хешируем пароль
+  this.passwordConfirm = undefined; // удаляем поле passwordConfirm
+
+  next();
 });
 
 // Создаем модель

@@ -23,7 +23,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide a password'],
-    minlength: [8, 'A user password must have more or equal then 8 characters']
+    minlength: [8, 'A user password must have more or equal then 8 characters'],
+    select: false // false - поле не будет возвращаться в ответе (чтобы не показывать пароли пользователя)
   },
   passwordConfirm: {
     type: String,
@@ -48,6 +49,15 @@ userSchema.pre('save', async function(next) {
 
   next();
 });
+
+// --- МЕТОДЫ MONGOOSE --- //
+// проверка совпадения пароля
+userSchema.methods.correctPassword = async function(
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 // Создаем модель
 const User = mongoose.model('User', userSchema); // mongoose автоматически преобразует имя 'User' в нижний регистр и множественное число: коллекция в MongoDB будет называться users

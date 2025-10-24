@@ -8,7 +8,7 @@ const {
   updateUser,
   deleteUser
 } = require('../controllers/userController');
-const { singup } = require('../controllers/authController');
+const { signup, login } = require('../controllers/authController');
 
 // Создаём экземпляр маршрутизатора Express
 const router = express.Router();
@@ -24,6 +24,7 @@ router
   .patch(updateUser)
   .delete(deleteUser);
 
-router.post('/singup', singup);
+router.post('/signup', signup);
+router.post('/login', login);
 
 module.exports = router;

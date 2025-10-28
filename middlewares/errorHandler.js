@@ -49,7 +49,7 @@ const sendErrorProd = (err, res, code, status) => {
       ? err.isOperational
       : String(code).startsWith('4');
 
-  console.log('ERROR 💥', `code: ${code}`);
+  console.log('ERROR 💥', `code: ${code}, error: ${err}`);
 
   res.status(code).json({
     status,
@@ -58,6 +58,14 @@ const sendErrorProd = (err, res, code, status) => {
       : 'Internal Server Error'
   });
 };
+
+// токен невалиден
+const handleJsonWebTokenError = () =>
+  new AppError(401, 'Invalid token. Please log in again!');
+
+// токен устарел
+const handleJsonWebTokenExpiredError = () =>
+  new AppError(401, 'Your token has expired! Please log in again!');
 
 module.exports = (err, req, res, next) => {
   // Обязательно: если ответ уже начался, менять его опасно — передаём ошибку встроенному обработчику Express, чтобы корректно закрыть соединение.
@@ -100,6 +108,9 @@ module.exports = (err, req, res, next) => {
     if (error?.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error?.name === 'ValidationError')
       error = handleValidationErrorDB(error);
+    if (error?.name === 'JsonWebTokenError') error = handleJsonWebTokenError();
+    if (error?.name === 'TokenExpiredError')
+      error = handleJsonWebTokenExpiredError();
 
     // Единообразно получаем финальный код/статус
     const code = Number.isInteger(error.statusCode)

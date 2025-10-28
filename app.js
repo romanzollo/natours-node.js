@@ -42,6 +42,7 @@ app.use(express.static(`${__dirname}/public`));
 // Другой пример middleware: добавляем к запросу текущее время
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // сохраняем время запроса в объекте req
+
   next();
 });
 

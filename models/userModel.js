@@ -36,6 +36,9 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Passwords are not the same!'
     }
+  },
+  passwordChangedAt: {
+    type: Date
   }
 });
 
@@ -46,6 +49,10 @@ userSchema.pre('save', async function(next) {
 
   this.password = await bcrypt.hash(this.password, 12); // хешируем пароль
   this.passwordConfirm = undefined; // удаляем поле passwordConfirm
+
+  if (!this.passwordChangedAt) {
+    this.passwordChangedAt = new Date(Date.now() - 1000); // минус 1с для iat
+  } // минус 1с для расхождения с iat
 
   next();
 });
@@ -58,6 +65,33 @@ userSchema.methods.correctPassword = async function(
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+
+// проверка изменения пароля
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  if (!this.passwordChangedAt) return false;
+
+  // переводим дату в секунды
+  const changedTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000);
+  console.log(changedTimestamp, JWTTimestamp);
+
+  // true - если пароль был изменен, false - если пароль не был изменен
+  return JWTTimestamp < changedTimestamp;
+};
+
+userSchema.set('toJSON', {
+  transform: (doc, ret) => {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  }
+});
+userSchema.set('toObject', {
+  transform: (doc, ret) => {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  }
+});
 
 // Создаем модель
 const User = mongoose.model('User', userSchema); // mongoose автоматически преобразует имя 'User' в нижний регистр и множественное число: коллекция в MongoDB будет называться users

@@ -12,7 +12,7 @@ const {
   getTourStats,
   getMonthlyPlan
 } = require('./../controllers/tourController');
-const { protect } = require('./../controllers/authController');
+const { protect, restrictTo } = require('./../controllers/authController');
 
 // Создаём экземпляр маршрутизатора Express
 const router = express.Router();
@@ -39,6 +39,6 @@ router
   .route('/:id')
   .get(getTour) // получить тур по id
   .patch(updateTour) // обновить тур
-  .delete(deleteTour); // удалить тур
+  .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour); // удалить тур
 
 module.exports = router;

@@ -106,8 +106,28 @@ const protect = catchAsync(async (req, res, next) => {
   next(); // предоставляем доступ к защищенному маршруту
 });
 
+// --- ПРОВЕРКА ПРАВ ПОЛЬЗОВАТЕЛЯ --- //
+const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return next(new AppError(401, 'Not authenticated')); // нет req.user — нарушен порядок middleware
+    }
+
+    const role = String(req.user.role || '').toLowerCase(); // приводим к нижнему регистру
+
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError(403, 'You do not have permission to perform this action.')
+      );
+    }
+
+    next();
+  };
+};
+
 module.exports = {
   signup,
   login,
-  protect
+  protect,
+  restrictTo
 };

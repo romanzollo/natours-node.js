@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
   photo: {
     type: String
   },
+  role: {
+    type: String,
+    enum: ['user', 'lead-guide', 'guide', 'admin'],
+    default: 'user'
+  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
@@ -47,12 +52,14 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
+  // Хеш пароля
   this.password = await bcrypt.hash(this.password, 12); // хешируем пароль
   this.passwordConfirm = undefined; // удаляем поле passwordConfirm
 
-  if (!this.passwordChangedAt) {
+  // записываем время изменения пароля
+  if (!this.isNew) {
     this.passwordChangedAt = new Date(Date.now() - 1000); // минус 1с для iat
-  } // минус 1с для расхождения с iat
+  }
 
   next();
 });

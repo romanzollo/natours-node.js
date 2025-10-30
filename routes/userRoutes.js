@@ -8,12 +8,34 @@ const {
   updateUser,
   deleteUser
 } = require('../controllers/userController');
-const { signup, login } = require('../controllers/authController');
+const {
+  signup,
+  login,
+  protect,
+  restrictTo
+} = require('../controllers/authController');
+const { updateUserRole } = require('../controllers/userAdminController');
 
 // Создаём экземпляр маршрутизатора Express
 const router = express.Router();
 
-// Определяем маршруты
+/**
+ * Публичные роуты авторизации
+ * Должны идти первыми и без защиты
+ */
+router.post('/signup', signup);
+router.post('/login', login);
+
+/**
+ * Ниже — защищённые роуты (нужен токен)
+ */
+router.use(protect);
+
+/**
+ * CRUD пользователей — доступ по необходимости.
+ * Например, GET всех пользователей и модификации — только для админов.
+ * Если нужно сделать часть открытой — убрать restrictTo там, где не нужно.
+ */
 router
   .route('/')
   .get(getAllUsers)
@@ -21,10 +43,13 @@ router
 router
   .route('/:id')
   .get(getUser)
-  .patch(updateUser)
-  .delete(deleteUser);
+  .patch(restrictTo('admin'), updateUser)
+  .delete(restrictTo('admin'), deleteUser);
 
-router.post('/signup', signup);
-router.post('/login', login);
+/**
+ * Админский маршрут для смены роли. Жёсткий whitelist реализован в контроллере:
+ * он обновляет только поле role и валидирует его.
+ */
+router.patch('/:id/role', restrictTo('admin'), updateUserRole);
 
 module.exports = router;

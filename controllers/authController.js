@@ -4,6 +4,7 @@ const { promisify } = require('util'); // утилита для промисиф
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const sendMail = require('../utils/email');
 
 // --- ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ТОКЕНА --- //
 const signToken = id => {
@@ -114,7 +115,6 @@ const restrictTo = (...roles) => {
     }
 
     const role = String(req.user.role || '').toLowerCase(); // приводим к нижнему регистру
-
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError(403, 'You do not have permission to perform this action.')
@@ -125,9 +125,64 @@ const restrictTo = (...roles) => {
   };
 };
 
+const forgotPassword = catchAsync(async (req, res, next) => {
+  // 1) Находим пользователя по отправленной почте
+  const user = await User.findOne({
+    email: req.body.email
+  });
+
+  if (!user) {
+    return next(new AppError(404, 'There is no user with email address.'));
+  }
+
+  // 2) генерируем случайный токен сброса
+  const resetToken = user.createPasswordResetToken();
+  await user.save({
+    validateBeforeSave: false
+  }); // сохраняем изменения
+
+  // 3) отправляем его пользователю по почте
+  const resetURL = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/users/reset-password/${resetToken}`;
+
+  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+
+  try {
+    // отправляем почту
+    await sendMail({
+      email: user.email,
+      subject: 'Your password reset token (valid for 10 min)',
+      message
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to email!'
+    });
+  } catch (error) {
+    user.passwordResetToken = undefined; // удаляем токен
+    user.passwordResetExpires = undefined; // удаляем время истечения
+    await user.save({
+      validateBeforeSave: false
+    }); // сохраняем изменения
+
+    return next(
+      new AppError(
+        500,
+        'There was an error sending the email. Try again later!'
+      )
+    );
+  }
+});
+
+const resetPassword = catchAsync(async (req, res, next) => {});
+
 module.exports = {
   signup,
   login,
   protect,
-  restrictTo
+  restrictTo,
+  forgotPassword,
+  resetPassword
 };

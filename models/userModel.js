@@ -2,6 +2,8 @@ const mongoose = require('mongoose'); // Импортируем библиоте
 const validator = require('validator'); // библиотека для кастомных валидаций
 const bcrypt = require('bcryptjs'); // библиотека для хеширования паролей
 
+const crypto = require('crypto'); // встроенная библиотека для генерации хешей
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -44,7 +46,9 @@ const userSchema = new mongoose.Schema({
   },
   passwordChangedAt: {
     type: Date
-  }
+  },
+  passwordResetToken: String,
+  passwordResetExpires: Date
 });
 
 // --- MONGOOSE MIDDLEWARES --- //
@@ -85,6 +89,24 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   return JWTTimestamp < changedTimestamp;
 };
 
+// создание токена для сброса пароля
+userSchema.methods.createPasswordResetToken = function() {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  // сохраняем токен в базе данных
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  console.log({ resetToken }, this.passwordResetToken);
+
+  // устанавливаем время жизни токена
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 минут
+
+  return resetToken;
+};
+
+// удаляем поля password и __v
 userSchema.set('toJSON', {
   transform: (doc, ret) => {
     delete ret.password;

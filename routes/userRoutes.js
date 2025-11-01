@@ -12,7 +12,9 @@ const {
   signup,
   login,
   protect,
-  restrictTo
+  restrictTo,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/authController');
 const { updateUserRole } = require('../controllers/userAdminController');
 
@@ -25,6 +27,8 @@ const router = express.Router();
  */
 router.post('/signup', signup);
 router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
+router.patch('/reset-password/:token', resetPassword);
 
 /**
  * Ниже — защищённые роуты (нужен токен)

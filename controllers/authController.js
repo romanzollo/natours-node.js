@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken'); // библеотека для создания токена
 const { promisify } = require('util'); // утилита для промисификации
+const crypto = require('crypto'); // встроенная библиотека для генерации хешей
 
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
@@ -176,7 +177,41 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-const resetPassword = catchAsync(async (req, res, next) => {});
+const resetPassword = catchAsync(async (req, res, next) => {
+  // 1) определяем пользователя по токену
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    // проверяем, что токен не истек (через mongoDB)
+    passwordResetExpires: { $gt: Date.now() }
+  });
+
+  // 2) если токен не истек, и пользователь существует, устанавливаем новый пароль
+  if (!user) {
+    return next(new AppError(400, 'Token is invalid or has expired.'));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  await user.save();
+
+  // 3) обновляем changedPasswordAt пользователя
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    token
+  });
+
+  // 4) авторизуем пользователя, отправляем токен
+});
 
 module.exports = {
   signup,

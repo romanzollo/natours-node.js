@@ -6,13 +6,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendMail = require('../utils/email');
-
-// --- ФУНКЦИЯ ДЛЯ СОЗДАНИЯ ТОКЕНА --- //
-const signToken = id => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN
-  });
-};
+const { createSendToken } = require('../utils/jwt'); // импортируем функцию отправки токена
 
 // --- РЕГИСТРАЦИЯ --- //
 const signup = catchAsync(async (req, res) => {
@@ -23,19 +17,7 @@ const signup = catchAsync(async (req, res) => {
     passwordConfirm: req.body.passwordConfirm
   });
 
-  // создаем токен
-  const token = signToken(newUser._id);
-
-  // подстраховка, если нет transform
-  if (newUser.password) newUser.password = undefined;
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser
-    }
-  });
+  return createSendToken(newUser, 201, res, { includeUser: true }); // вернуть токен + пользователя
 });
 
 // --- АВТОРИЗАЦИЯ --- //
@@ -56,12 +38,7 @@ const login = catchAsync(async (req, res, next) => {
   }
 
   // 3) если все ОК, создаем и отправляем токен пользователю
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token
-  });
+  return createSendToken(user, 200, res); // токен и стандартизированный ответ
 });
 
 // --- ПРОВЕРКА ТОКЕНА --- //
@@ -126,6 +103,7 @@ const restrictTo = (...roles) => {
   };
 };
 
+// --- СБРОС ПАРОЛЯ --- //
 const forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Находим пользователя по отправленной почте
   const user = await User.findOne({
@@ -177,6 +155,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
+// --- СБРОС ПАРОЛЯ --- //
 const resetPassword = catchAsync(async (req, res, next) => {
   // 1) определяем пользователя по токену
   const hashedToken = crypto
@@ -199,18 +178,49 @@ const resetPassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
-
   await user.save();
 
   // 3) обновляем changedPasswordAt пользователя
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token
-  });
 
   // 4) авторизуем пользователя, отправляем токен
+  return createSendToken(user, 200, res);
+});
+
+// --- ОБНОВЛЕНИЕ ПАРОЛЯ --- //
+const updatePassword = catchAsync(async (req, res, next) => {
+  // 0) Ранняя валидация входных данных
+  const { passwordCurrent, password, passwordConfirm } = req.body;
+  if (!passwordCurrent || !password || !passwordConfirm) {
+    return next(
+      new AppError(
+        400,
+        'Provide passwordCurrent, password and passwordConfirm.'
+      )
+    );
+  }
+  if (password !== passwordConfirm) {
+    // перехватываем несоответствие до save, чтобы вернуть чистый 400
+    return next(new AppError(400, 'Passwords are not the same'));
+  }
+
+  // 1) получаем пользователя из базы данных (с паролем)
+  const user = await User.findById(req.user.id).select('+password');
+  if (!user) return next(new AppError(401, 'Not authenticated'));
+
+  // 2) Проверяем текущий пароль — здесь вернём 401 при неверном
+  const isCorrect = await user.correctPassword(passwordCurrent, user.password);
+  if (!isCorrect) {
+    return next(new AppError(401, 'Your current password is wrong.'));
+  }
+
+  // 3) Применяем новые значения и сохраняем
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  // User.findByIdAndUpdate не сработает,
+
+  // 4) Логиним заново и выходим
+  return createSendToken(user, 200, res);
 });
 
 module.exports = {
@@ -219,5 +229,6 @@ module.exports = {
   protect,
   restrictTo,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updatePassword
 };

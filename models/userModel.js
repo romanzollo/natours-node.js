@@ -48,7 +48,12 @@ const userSchema = new mongoose.Schema({
     type: Date
   },
   passwordResetToken: String,
-  passwordResetExpires: Date
+  passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false
+  }
 });
 
 // --- MONGOOSE MIDDLEWARES --- //
@@ -65,6 +70,12 @@ userSchema.pre('save', async function(next) {
     this.passwordChangedAt = new Date(Date.now() - 1000); // минус 1с для iat
   }
 
+  next();
+});
+
+userSchema.pre(/^find/, function(next) {
+  // this — это Query
+  this.where({ active: { $ne: false } });
   next();
 });
 

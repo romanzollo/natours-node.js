@@ -49,6 +49,7 @@ const userSchema = new mongoose.Schema({
   },
   passwordResetToken: String,
   passwordResetExpires: Date,
+  // активен ли аккаунт (при удалении аккаунта будет неактивен - false)
   active: {
     type: Boolean,
     default: true,

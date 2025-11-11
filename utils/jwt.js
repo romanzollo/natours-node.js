@@ -20,7 +20,7 @@ const createSendToken = (user, statusCode, res, options = {}) => {
   // Не возвращаем пароль в ответе
   if (user.password) user.password = undefined; // базовая гигиена ответа
 
-  // Установка httpOnly cookie при необходимости
+  // устанавливаем httpOnly cookie
   //   if (options.cookie) {
   //     const cookieOpts = {
   //       httpOnly: true, // cookie недоступна JS, защищает от XSS
@@ -30,10 +30,22 @@ const createSendToken = (user, statusCode, res, options = {}) => {
   //         Date.now() +
   //           (process.env.JWT_COOKIE_EXPIRES_IN_DAYS || 7) * 24 * 60 * 60 * 1000
   //       ),
-  //       ...(typeof options.cookie === 'object' ? options.cookie : {})
+  //       ...(options.cookie && typeof options.cookie === 'object' && !Array.isArray(options.cookie) ? options.cookie : {})
   //     };
-  //     res.cookie('jwt', token, cookieOpts); // Set-Cookie с httpOnly JWT
+
+  //     res.cookie('jwt', token, cookieOpts); // устанавливаем Cookie с httpOnly JWT
   //   }
+
+  const cookieOptions = {
+    httpOnly: true, // cookie недоступна JS, защищает от XSS
+    secure: process.env.NODE_ENV === 'production', // только по HTTPS в проде
+    sameSite: 'lax', // уменьшает CSRF, можно 'strict' для большей защиты
+    expires: new Date(
+      Date.now() +
+        (process.env.JWT_COOKIE_EXPIRES_IN || 7) * 24 * 60 * 60 * 1000
+    )
+  };
+  res.cookie('jwt', token, cookieOptions);
 
   const body = {
     status: 'success',
@@ -41,7 +53,9 @@ const createSendToken = (user, statusCode, res, options = {}) => {
   };
 
   if (options.includeUser) {
-    body.data = { user };
+    body.data = {
+      user
+    };
   }
 
   return res.status(statusCode).json(body); // единый формат ответа

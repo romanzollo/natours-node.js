@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const qs = require('qs'); // для парсинга строки запроса
 const rateLimit = require('express-rate-limit'); // для лимита запросов
+const helmet = require('helmet'); // для защиты HTTP-headers
 
 // Импортируем маршруты для туров из внешнего файла
 const tourRouter = require('./routes/tourRoutes');
@@ -24,6 +25,9 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Защита HTTP-заголовков
+app.use(helmet());
+
 // Реализуем лимит запросов
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 15 minutes
@@ -34,7 +38,11 @@ app.use('/api', limiter);
 
 // Встроенный middleware: парсит тело входящих запросов из JSON в объект req.body
 // Теперь мы можем получать данные из POST/PATCH и других запросов с JSON
-app.use(express.json());
+app.use(
+  express.json({
+    limit: '10kb' // ограничиваем размер тела запроса
+  })
+);
 
 // Безопасный парсинг строки запроса с ограничениями глубины/кол-ва параметров
 app.set('query parser', str =>
@@ -48,7 +56,7 @@ app.set('query parser', str =>
 
 app.use(express.static(`${__dirname}/public`));
 
-// Другой пример middleware: добавляем к запросу текущее время
+// Другой пример middleware: добавляем к запросу текущее время (для теста)
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // сохраняем время запроса в объекте req
 

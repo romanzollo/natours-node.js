@@ -2,6 +2,7 @@ const express = require('express');
 // Подключаем библиотеку morgan — логгер HTTP-запросов (для отладки)
 const morgan = require('morgan');
 const qs = require('qs'); // для парсинга строки запроса
+const rateLimit = require('express-rate-limit'); // для лимита запросов
 
 // Импортируем маршруты для туров из внешнего файла
 const tourRouter = require('./routes/tourRoutes');
@@ -15,13 +16,21 @@ const errorHandler = require('./middlewares/errorHandler');
 // Создаём экземпляр приложения Express
 const app = express();
 
-// ==================== MIDDLEWARE ====================
+// ==================== GLOBAL MIDDLEWARE ====================
 // Middleware — функции, которые обрабатывают входящие запросы до того, как они попадут в маршруты
 
 // Логгируем информацию о запросах (метод, путь, статус, время) — только для режима разработки
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+// Реализуем лимит запросов
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  message: 'Too many requests from this IP, please try again in an hour!'
+});
+app.use('/api', limiter);
 
 // Встроенный middleware: парсит тело входящих запросов из JSON в объект req.body
 // Теперь мы можем получать данные из POST/PATCH и других запросов с JSON

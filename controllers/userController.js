@@ -13,7 +13,12 @@ const filterObj = (obj, ...allowed) => {
 };
 
 const getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+  // Если есть req.safeQuery — используем её; иначе можно оставить {}
+  const baseFilter = req.safeQuery || {};
+  const users = await User.find({
+    ...baseFilter,
+    active: true
+  });
 
   // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
   res.status(200).json({

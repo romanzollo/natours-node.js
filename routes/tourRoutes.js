@@ -1,4 +1,5 @@
 const express = require('express');
+const { xss } = require('express-xss-sanitizer'); // для санитизации входных данных
 
 // Импортируем контроллеры для обработки запросов
 // Каждая функция отвечает за определённое действие: получение всех туров, создание, обновление и т.д.
@@ -36,7 +37,7 @@ router
   .post(createTour); // создать новый тур
 
 router
-  .route('/:id')
+  .route('/:id', xss())
   .get(getTour) // получить тур по id
   .patch(updateTour) // обновить тур
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour); // удалить тур

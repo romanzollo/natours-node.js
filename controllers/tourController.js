@@ -21,10 +21,13 @@ const aliasTopTours = (req, res, next) => {
 
 // --- получить все туры --- //
 const getAllTours = catchAsync(async (req, res, next) => {
+  // Источник пользовательских фильтров: безопасная копия, если есть, иначе req.query (только чтение)
+  const userQuery = req.safeQuery || req.query;
+
   // --- ВЫПОЛНЯЕМ ЗАПРОС --- //
   const features = new APIFeatures(
     Tour.find(),
-    req.query,
+    userQuery,
     req.aliasQuery // сюда подаём "виртуальные" параметры
   )
     .filter()

@@ -1,4 +1,5 @@
 const express = require('express');
+const { xss } = require('express-xss-sanitizer'); // для санитизации входных данных
 
 // Импортируем контроллеры для обработки запросов
 const {
@@ -28,13 +29,14 @@ const router = express.Router();
  * Публичные роуты авторизации
  * Должны идти первыми и без защиты
  */
-router.post('/signup', signup);
-router.post('/login', login);
-router.post('/forgot-password', forgotPassword);
-router.patch('/reset-password/:token', resetPassword);
-router.patch('/update-my-password', protect, updatePassword);
-router.patch('/update-me', protect, updateMe);
-router.delete('/delete-me', protect, deleteMe);
+router.post('/signup', xss(), signup);
+router.post('/login', xss(), login);
+router.post('/forgot-password', xss(), forgotPassword);
+// :token — добавляем xss() чтобы очистить req.params.token
+router.patch('/reset-password/:token', xss(), resetPassword);
+router.patch('/update-my-password', protect, xss(), updatePassword);
+router.patch('/update-me', protect, xss(), updateMe);
+router.delete('/delete-me', protect, xss(), deleteMe);
 
 /**
  * Ниже — защищённые роуты (нужен токен)
@@ -49,9 +51,10 @@ router.use(protect);
 router
   .route('/')
   .get(getAllUsers)
-  .post(createUser);
+  .post(xss(), createUser);
 router
   .route('/:id')
+  .all(xss())
   .get(getUser)
   .patch(restrictTo('admin'), updateUser)
   .delete(restrictTo('admin'), deleteUser);
@@ -60,6 +63,6 @@ router
  * Админский маршрут для смены роли. Жёсткий whitelist реализован в контроллере:
  * он обновляет только поле role и валидирует его.
  */
-router.patch('/:id/role', restrictTo('admin'), updateUserRole);
+router.patch('/:id/role', xss(), restrictTo('admin'), updateUserRole);
 
 module.exports = router;

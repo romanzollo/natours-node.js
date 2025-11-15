@@ -74,11 +74,11 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-userSchema.pre(/^find/, function(next) {
-  // this — это Query
-  this.where({ active: { $ne: false } });
-  next();
-});
+// userSchema.pre(/^find/, function(next) {
+//   // this — это Query
+//   this.where({ active: { $ne: false } });
+//   next();
+// });
 
 // --- МЕТОДЫ MONGOOSE --- //
 // проверка совпадения пароля

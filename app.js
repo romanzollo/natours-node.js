@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const qs = require('qs'); // для парсинга строки запроса
 const rateLimit = require('express-rate-limit'); // для лимита запросов
 const helmet = require('helmet'); // для защиты HTTP-headers
+// const mongoSanitize = require('express-mongo-sanitize'); // для санитизации входных данных
+const { xss } = require('express-xss-sanitizer'); // для санитизации входных данных
 
 // Импортируем маршруты для туров из внешнего файла
 const tourRouter = require('./routes/tourRoutes');
@@ -44,6 +46,9 @@ app.use(
   })
 );
 
+// санитизация входных данных для преотвращения XSS
+app.use(xss({ applyTo: { body: true, query: false, headers: true } }));
+
 // Безопасный парсинг строки запроса с ограничениями глубины/кол-ва параметров
 app.set('query parser', str =>
   qs.parse(str, {
@@ -53,6 +58,23 @@ app.set('query parser', str =>
     allowPrototypes: false // не трогаем прототипы объектов
   })
 );
+
+// формируем безопасную копию query, не записывая обратно в req.query
+app.use((req, res, next) => {
+  const q = req.query;
+  if (q && typeof q === 'object') {
+    const safe = {};
+    for (const [k, v] of Object.entries(q)) {
+      if (typeof k === 'string' && !k.startsWith('$') && !k.includes('.')) {
+        safe[k] = v;
+      }
+    }
+    req.safeQuery = safe;
+  } else {
+    req.safeQuery = {};
+  }
+  next();
+});
 
 app.use(express.static(`${__dirname}/public`));
 

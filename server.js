@@ -8,6 +8,9 @@ process.on('uncaughtException', err => {
 
 // Импортируем библиотеку mongoose
 const mongoose = require('mongoose');
+// ВКЛЮЧАЕМ БЕЗОПАСНУЮ ФИЛЬТРАЦИЮ ОПЕРАТОРОВ ДЛЯ ЗАПРОСОВ
+mongoose.set('sanitizeFilter', true);
+
 // Загружаем переменные окружения из файла config.env
 require('dotenv').config();
 /**

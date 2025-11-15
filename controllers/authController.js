@@ -9,12 +9,26 @@ const sendMail = require('../utils/email');
 const { createSendToken } = require('../utils/jwt'); // импортируем функцию отправки токена
 
 // --- РЕГИСТРАЦИЯ --- //
-const signup = catchAsync(async (req, res) => {
+const signup = catchAsync(async (req, res, next) => {
+  // whitelisting
+  const name = String(req.body.name || '').trim();
+  const email = String(req.body.email || '')
+    .trim()
+    .toLowerCase();
+  const password = String(req.body.password || '');
+  const passwordConfirm = String(req.body.passwordConfirm || '');
+
+  if (!name || !email || !password || !passwordConfirm) {
+    return next(
+      new AppError(400, 'Provide name, email, password, passwordConfirm.')
+    );
+  }
+
   const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
+    name,
+    email,
+    password,
+    passwordConfirm
   });
 
   return createSendToken(newUser, 201, res, { includeUser: true }); // вернуть токен + пользователя
@@ -22,35 +36,35 @@ const signup = catchAsync(async (req, res) => {
 
 // --- АВТОРИЗАЦИЯ --- //
 const login = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+  // 0) Белый список входа
+  const email = String(req.body.email || '')
+    .trim()
+    .toLowerCase();
+  const password = String(req.body.password || '');
 
   // 1) Проверяем наличие email и пароля
   if (!email || !password) {
     return next(new AppError(400, 'Please provide email and password!'));
   }
 
-  // 2) проверяем существует ли пользователь и совпадают ли пароли
-  const user = await User.findOne({ email }).select('+password'); // + - для выборки пароля отображение которого отключено в модели пользователя через select: false
+  // 2) Ищем только по whitelisted полю и ЖЁСТКО фильтруем active
+  const user = await User.findOne({ email, active: true }).select('+password'); // + - для выборки пароля отображение которого отключено в модели пользователя через select: false
 
-  // при таком подходе проверка паролей будет только в случае если пользователь существует👍
+  // 3) при таком подходе проверка паролей будет только в случае если пользователь существует👍
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError(401, 'Incorrect email or password'));
   }
 
-  // 3) если все ОК, создаем и отправляем токен пользователю
+  // 4) если все ОК, создаем и отправляем токен пользователю
   return createSendToken(user, 200, res); // токен и стандартизированный ответ
 });
 
 // --- ПРОВЕРКА ТОКЕНА --- //
 const protect = catchAsync(async (req, res, next) => {
-  // 1) Проверяем наличие токена
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1]; // Bearer token
-  }
+  // 1) whitelisting
+  const auth = req.headers.authorization || '';
+  const hasBearer = auth.startsWith('Bearer ');
+  const token = hasBearer ? auth.slice(7) : null;
 
   if (!token) {
     return next(
@@ -87,13 +101,15 @@ const protect = catchAsync(async (req, res, next) => {
 
 // --- ПРОВЕРКА ПРАВ ПОЛЬЗОВАТЕЛЯ --- //
 const restrictTo = (...roles) => {
+  const allowed = roles.map(r => String(r).toLowerCase());
+
   return (req, res, next) => {
     if (!req.user) {
       return next(new AppError(401, 'Not authenticated')); // нет req.user — нарушен порядок middleware
     }
 
     const role = String(req.user.role || '').toLowerCase(); // приводим к нижнему регистру
-    if (!roles.includes(req.user.role)) {
+    if (!allowed.includes(role)) {
       return next(
         new AppError(403, 'You do not have permission to perform this action.')
       );
@@ -105,14 +121,15 @@ const restrictTo = (...roles) => {
 
 // --- СБРОС ПАРОЛЯ --- //
 const forgotPassword = catchAsync(async (req, res, next) => {
-  // 1) Находим пользователя по отправленной почте
-  const user = await User.findOne({
-    email: req.body.email
-  });
+  const email = String(req.body.email || '')
+    .trim()
+    .toLowerCase();
+  if (!email) return next(new AppError(400, 'Email is required.'));
 
-  if (!user) {
+  // 1) Находим пользователя по отправленной почте
+  const user = await User.findOne({ email }).select('+email');
+  if (!user)
     return next(new AppError(404, 'There is no user with email address.'));
-  }
 
   // 2) генерируем случайный токен сброса
   const resetToken = user.createPasswordResetToken();
@@ -157,25 +174,55 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 
 // --- СБРОС ПАРОЛЯ --- //
 const resetPassword = catchAsync(async (req, res, next) => {
-  // 1) определяем пользователя по токену
+  // 1) серверное хеширование токена
+  const tokenRaw = String(req.params.token || '');
+  if (!tokenRaw) return next(new AppError(400, 'Token is required.'));
+
+  // 2) определяем пользователя по токену + серверное хеширование токена
   const hashedToken = crypto
     .createHash('sha256')
-    .update(req.params.token)
+    .update(tokenRaw)
     .digest('hex');
 
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    // проверяем, что токен не истек (через mongoDB)
-    passwordResetExpires: { $gt: Date.now() }
-  });
+  // 3) устойчивый поиск через агрегат ($expr для сравнения дат)
+  const now = new Date();
+  const docs = await User.aggregate([
+    {
+      $match: {
+        passwordResetToken: hashedToken
+      }
+    },
+    {
+      $match: {
+        $expr: {
+          $gt: ['$passwordResetExpires', now]
+        }
+      }
+    }
+  ]);
+  const found = docs[0];
+  if (!found) {
+    return next(new AppError(400, 'Token is invalid or has expired.'));
+  }
 
-  // 2) если токен не истек, и пользователь существует, устанавливаем новый пароль
+  // 4) загрузить документ и сохранить (чтобы сработали pre('save'))
+  const user = await User.findById(found._id).select('+password');
   if (!user) {
     return next(new AppError(400, 'Token is invalid or has expired.'));
   }
 
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  // whitelisting
+  const password = String(req.body.password || '');
+  const passwordConfirm = String(req.body.passwordConfirm || '');
+  if (!password || !passwordConfirm) {
+    return next(new AppError(400, 'Provide password and passwordConfirm.'));
+  }
+  if (password !== passwordConfirm) {
+    return next(new AppError(400, 'Passwords are not the same'));
+  }
+
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();
@@ -188,8 +235,11 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
 // --- ОБНОВЛЕНИЕ ПАРОЛЯ --- //
 const updatePassword = catchAsync(async (req, res, next) => {
-  // 0) Ранняя валидация входных данных
-  const { passwordCurrent, password, passwordConfirm } = req.body;
+  // 0) whitelisting
+  const passwordCurrent = String(req.body.passwordCurrent || '');
+  const password = String(req.body.password || '');
+  const passwordConfirm = String(req.body.passwordConfirm || '');
+
   if (!passwordCurrent || !password || !passwordConfirm) {
     return next(
       new AppError(
@@ -214,8 +264,8 @@ const updatePassword = catchAsync(async (req, res, next) => {
   }
 
   // 3) Применяем новые значения и сохраняем
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
   await user.save();
   // User.findByIdAndUpdate не сработает,
 

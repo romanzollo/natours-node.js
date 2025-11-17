@@ -14,6 +14,7 @@ const {
   getMonthlyPlan
 } = require('./../controllers/tourController');
 const { protect, restrictTo } = require('./../controllers/authController');
+const canSeeSecretTours = require('../middlewares/canSeeSecretTours');
 
 // Создаём экземпляр маршрутизатора Express
 const router = express.Router();
@@ -33,7 +34,7 @@ router.route('/monthly-plan/:year').get(getMonthlyPlan); // получить п�
 // ==================== СТАНДАРТНЫЕ РОУТЫ ====================
 router
   .route('/')
-  .get(protect, getAllTours) // получить все туры
+  .get(protect, canSeeSecretTours, getAllTours) // получить все туры
   .post(createTour); // создать новый тур
 
 router

@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit'); // для лимита запр
 const helmet = require('helmet'); // для защиты HTTP-headers
 // const mongoSanitize = require('express-mongo-sanitize'); // для санитизации входных данных
 const { xss } = require('express-xss-sanitizer'); // для санитизации входных данных
+const hpp = require('hpp'); // для предотвращения дублирования HTTP-параметров
 
 // Импортируем маршруты для туров из внешнего файла
 const tourRouter = require('./routes/tourRoutes');
@@ -48,6 +49,20 @@ app.use(
 
 // санитизация входных данных для преотвращения XSS
 app.use(xss({ applyTo: { body: true, query: false, headers: true } }));
+
+// Предотвращение дублирования HTTP-параметров
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsAverage',
+      'ratingsQuantity',
+      'maxGroupSize',
+      'difficulty',
+      'price'
+    ]
+  })
+);
 
 // Безопасный парсинг строки запроса с ограничениями глубины/кол-ва параметров
 app.set('query parser', str =>

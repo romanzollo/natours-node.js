@@ -32,6 +32,7 @@ class APIFeatures {
   // --- СОРТИРОВКА --- //
   sort() {
     if (this.queryParams.sort) {
+      console.log(this.queryParams.sort);
       const sortBy = this.queryParams.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {

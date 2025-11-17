@@ -102,19 +102,20 @@ tourSchema.pre('save', function(next) {
   next();
 });
 
-// middleware запроса
-tourSchema.pre(/^find/, function(next) {
-  this.find({ secretTour: { $ne: true } });
+/* убрал из за конфликта так как заставляют Mongoose пытаться привести операторный объект к Boolean при query casting */
+// // middleware запроса
+// tourSchema.pre(/^find/, function(next) {
+//   this.find({ secretTour: { $ne: true } });
 
-  next();
-});
+//   next();
+// });
 
-// aggregation middleware
-tourSchema.pre('aggregate', function(next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); // добавляем фильтр $match
+// // aggregation middleware
+// tourSchema.pre('aggregate', function(next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } }); // добавляем фильтр $match
 
-  next();
-});
+//   next();
+// });
 
 // ------------------------------- //
 

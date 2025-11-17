@@ -23,10 +23,16 @@ const aliasTopTours = (req, res, next) => {
 const getAllTours = catchAsync(async (req, res, next) => {
   // Источник пользовательских фильтров: безопасная копия, если есть, иначе req.query (только чтение)
   const userQuery = req.safeQuery || req.query;
+  // Публично скрываем секретные, привилегированные роли видят все
+  const baseFilter = req.canSeeSecretTours
+    ? {}
+    : {
+        secretTour: false
+      };
 
   // --- ВЫПОЛНЯЕМ ЗАПРОС --- //
   const features = new APIFeatures(
-    Tour.find(),
+    Tour.find(baseFilter),
     userQuery,
     req.aliasQuery // сюда подаём "виртуальные" параметры
   )

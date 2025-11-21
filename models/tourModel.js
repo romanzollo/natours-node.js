@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'); // Импортируем библиотеку mongoose
 const slugify = require('slugify'); // библиотека для генерации slug
 const validator = require('validator'); // библиотека для кастомных валидаций
+const User = require('./userModel');
 
 // Определяем схему модели тура (структуру и правила для документа тура)
 const tourSchema = new mongoose.Schema(
@@ -80,7 +81,39 @@ const tourSchema = new mongoose.Schema(
     secretTour: {
       type: Boolean,
       default: false
-    }
+    },
+    // географическое положение начала тура
+    startLocation: {
+      // GeoJSON
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point']
+      },
+      coordinates: [Number],
+      address: String,
+      description: String
+    },
+    // массив географических точек (денормализация)
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point']
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number
+      }
+    ],
+    guides: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ]
   },
   {
     timestamps: true, // опционально: добавляет createdAt и updatedAt
@@ -95,10 +128,15 @@ tourSchema.virtual('durationWeeks').get(function() {
 });
 
 // --- MONGOOSE MIDDLEWARES --- //
-// middleware документа: срабатывает перед сохранением и созданием (только .save() и .create()) (в insertMany() не сработает)
+// middlewares документа: срабатывает перед сохранением и созданием (только .save() и .create()) (в insertMany() не сработает)
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true }); // добавляем slug
 
+  next();
+});
+
+tourSchema.pre(/^find/, function(next) {
+  this.populate('guides');
   next();
 });
 

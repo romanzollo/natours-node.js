@@ -1,7 +1,6 @@
 const mongoose = require('mongoose'); // Импортируем библиотеку mongoose
 const slugify = require('slugify'); // библиотека для генерации slug
 const validator = require('validator'); // библиотека для кастомных валидаций
-const User = require('./userModel');
 
 // Определяем схему модели тура (структуру и правила для документа тура)
 const tourSchema = new mongoose.Schema(
@@ -136,7 +135,11 @@ tourSchema.pre('save', function(next) {
 });
 
 tourSchema.pre(/^find/, function(next) {
-  this.populate('guides');
+  this.populate({
+    path: 'guides',
+    select: '-passwordChangedAt' // исключаем поле при выдаче данных
+  });
+
   next();
 });
 

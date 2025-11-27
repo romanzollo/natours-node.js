@@ -15,6 +15,7 @@ const {
 } = require('./../controllers/tourController');
 const { protect, restrictTo } = require('./../controllers/authController');
 const canSeeSecretTours = require('../middlewares/canSeeSecretTours');
+const reviewRouter = require('./reviewRoutes');
 
 // Создаём экземпляр маршрутизатора Express
 const router = express.Router();
@@ -27,6 +28,8 @@ const router = express.Router();
 // aliasTopTours - middleware, который заранее «подставляет» limit/sort/fields,
 // чтобы дальше getAllTours работал так, как будто юзер сам передал эти query-параметры
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours); // получить 5 самых дешевых туров
+
+router.use('/:tourId/reviews', reviewRouter);
 
 router.route('/tour-stats').get(getTourStats); // получить статистику по турам
 router.route('/monthly-plan/:year').get(getMonthlyPlan); // получить план по месяцам

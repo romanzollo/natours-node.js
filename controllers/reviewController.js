@@ -1,5 +1,6 @@
 const Review = require('../models/reviewModel'); // импортируем модель
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
 
 // --- получаем все отзывы --- //
 const getAllReviews = catchAsync(async (req, res, next) => {
@@ -30,7 +31,11 @@ const createReview = catchAsync(async (req, res, next) => {
   });
 });
 
+// --- Удалить конкретный отзыв --- //
+const deleteReview = factory.deleteOne(Review);
+
 module.exports = {
   getAllReviews,
-  createReview
+  createReview,
+  deleteReview
 };

@@ -1,6 +1,7 @@
 const User = require('../models/userModel'); // импортируем модель
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
 
 // Функция для фильтрации ненужных полей
 const filterObj = (obj, ...allowed) => {
@@ -93,12 +94,8 @@ const updateUser = (req, res) => {
   });
 };
 
-const deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  });
-};
+// --- Удалить пользователя из БД (администратором) --- //
+const deleteUser = factory.deleteOne(User);
 
 module.exports = {
   getAllUsers,

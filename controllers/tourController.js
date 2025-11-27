@@ -2,6 +2,7 @@ const Tour = require('../models/tourModel'); // импортируем моде�
 const APIFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
 
 // ==================== MIDDLEWARE ====================
 // middleware для получения 5 самых дешевых/популярных туров
@@ -99,19 +100,7 @@ const updateTour = catchAsync(async (req, res, next) => {
 });
 
 // --- удалить конкретный тур --- //
-const deleteTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndDelete(req.params.id);
-
-  // если тур не нашелся пробрасываем ошибку в глобальный обработчик ошибок
-  if (!tour) {
-    return next(new AppError(404, 'No tour found with that ID'));
-  }
-
-  res.status(204).json({
-    status: 'success',
-    data: null
-  });
-});
+const deleteTour = factory.deleteOne(Tour);
 
 // --- получаем статистику по турам (agregation pipeline) --- //
 const getTourStats = catchAsync(async (req, res, next) => {

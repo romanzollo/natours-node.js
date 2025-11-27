@@ -3,7 +3,10 @@ const catchAsync = require('../utils/catchAsync');
 
 // --- получаем все отзывы --- //
 const getAllReviews = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find();
+  let filter = {};
+  if (req.params.tourId) filter = { tour: req.params.tourId }; // если есть tourId в params
+
+  const reviews = await Review.find(filter);
 
   // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
   res.status(200).json({

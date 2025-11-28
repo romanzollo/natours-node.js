@@ -70,37 +70,9 @@ const getTour = catchAsync(async (req, res, next) => {
   });
 });
 
-// --- создать новый тур --- //
-const createTour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    //   data: { tours: newTour }
-    data: { tour: newTour }
-  });
-});
-
-// --- обновить конкретный тур --- //
-const updateTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true, // вернуть обновлённый документ
-    runValidators: true // запускать валидацию схемы
-  });
-
-  // если тур не нашелся пробрасываем ошибку в глобальный обработчик ошибок
-  if (!tour) {
-    return next(new AppError(404, 'No tour found with that ID'));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: { tour }
-  });
-});
-
-// --- удалить конкретный тур --- //
-const deleteTour = factory.deleteOne(Tour);
+const createTour = factory.createOne(Tour); // создать конкретный тур
+const updateTour = factory.updateOne(Tour); // обновить конкретный тур
+const deleteTour = factory.deleteOne(Tour); // удалить конкретный тур
 
 // --- получаем статистику по турам (agregation pipeline) --- //
 const getTourStats = catchAsync(async (req, res, next) => {

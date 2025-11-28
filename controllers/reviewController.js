@@ -17,25 +17,22 @@ const getAllReviews = catchAsync(async (req, res, next) => {
   });
 });
 
-// --- создать новый отзыв --- //
-const createReview = catchAsync(async (req, res, next) => {
+const setTourUserIds = (req, res, next) => {
   // allow nested routes
   if (!req.body.tour) req.body.tour = req.params.tourId;
   if (!req.body.user) req.body.user = req.user.id;
 
-  const newReview = await Review.create(req.body);
+  next();
+};
 
-  res.status(201).json({
-    status: 'success',
-    data: { review: newReview }
-  });
-});
-
-// --- Удалить конкретный отзыв --- //
-const deleteReview = factory.deleteOne(Review);
+const createReview = factory.createOne(Review); // создать конкретный отзыв
+const updateReview = factory.updateOne(Review); // обновить конкретный отзыв
+const deleteReview = factory.deleteOne(Review); // удалить конкретный отзыв
 
 module.exports = {
   getAllReviews,
   createReview,
-  deleteReview
+  deleteReview,
+  updateReview,
+  setTourUserIds
 };

@@ -87,15 +87,9 @@ const getUser = (req, res) => {
   });
 };
 
-const updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  });
-};
-
-// --- Удалить пользователя из БД (администратором) --- //
-const deleteUser = factory.deleteOne(User);
+// не обновлять пароль таким образом
+const updateUser = factory.updateOne(User); // Обновить пользователя
+const deleteUser = factory.deleteOne(User); // Удалить пользователя из БД (администратором)
 
 module.exports = {
   getAllUsers,

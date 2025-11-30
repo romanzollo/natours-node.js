@@ -1,6 +1,7 @@
 const express = require('express');
 
 const {
+  getReview,
   getAllReviews,
   createReview,
   deleteReview,
@@ -18,6 +19,7 @@ router
 
 router
   .route('/:id')
+  .get(protect, getReview)
   .patch(protect, updateReview)
   .delete(protect, restrictTo('user', 'admin'), deleteReview);
 

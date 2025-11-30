@@ -1,21 +1,6 @@
 const Review = require('../models/reviewModel'); // импортируем модель
-const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
-
-// --- получаем все отзывы --- //
-const getAllReviews = catchAsync(async (req, res, next) => {
-  let filter = {};
-  if (req.params.tourId) filter = { tour: req.params.tourId }; // если есть tourId в params
-
-  const reviews = await Review.find(filter);
-
-  // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
-  res.status(200).json({
-    status: 'success',
-    results: reviews.length,
-    data: { reviews }
-  });
-});
+// const catchAsync = require('../utils/catchAsync');
 
 const setTourUserIds = (req, res, next) => {
   // allow nested routes
@@ -25,11 +10,17 @@ const setTourUserIds = (req, res, next) => {
   next();
 };
 
+const getAllReviews = factory.getAll(Review, req => {
+  // Возвращаем фильтр в зависимости от наличия параметра tourId
+  return req.params.tourId ? { tour: req.params.tourId } : {};
+}); // получить все отзывы
+const getReview = factory.getOne(Review); // получить конкретный отзыв
 const createReview = factory.createOne(Review); // создать конкретный отзыв
 const updateReview = factory.updateOne(Review); // обновить конкретный отзыв
 const deleteReview = factory.deleteOne(Review); // удалить конкретный отзыв
 
 module.exports = {
+  getReview,
   getAllReviews,
   createReview,
   deleteReview,

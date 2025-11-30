@@ -13,22 +13,6 @@ const filterObj = (obj, ...allowed) => {
   return out;
 };
 
-const getAllUsers = catchAsync(async (req, res, next) => {
-  // Если есть req.safeQuery — используем её; иначе можно оставить {}
-  const baseFilter = req.safeQuery || {};
-  const users = await User.find({
-    ...baseFilter,
-    active: true
-  });
-
-  // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: { users }
-  });
-});
-
 // --- Обновить свой профиль --- //
 const updateMe = catchAsync(async (req, res, next) => {
   // Позволяем менять только эти поля
@@ -76,19 +60,13 @@ const deleteMe = catchAsync(async (req, res, next) => {
 const createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message: 'This route is not yet defined!'
+    message: 'This route is not defined! Please use /signup instead'
   });
 };
 
-const getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  });
-};
-
-// не обновлять пароль таким образом
-const updateUser = factory.updateOne(User); // Обновить пользователя
+const getAllUsers = factory.getAll(User); // Получить всех пользователей
+const getUser = factory.getOne(User); // Получить конкретного пользователя
+const updateUser = factory.updateOne(User); // Обновить пользователя (не обновлять пароль таким образом)
 const deleteUser = factory.deleteOne(User); // Удалить пользователя из БД (администратором)
 
 module.exports = {

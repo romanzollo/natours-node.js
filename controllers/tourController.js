@@ -21,55 +21,41 @@ const aliasTopTours = (req, res, next) => {
 // ==================== КОНТРОЛЛЕРЫ ====================
 
 // --- получить все туры --- //
-const getAllTours = catchAsync(async (req, res, next) => {
-  // Источник пользовательских фильтров: безопасная копия, если есть, иначе req.query (только чтение)
-  const userQuery = req.safeQuery || req.query;
-  // Публично скрываем секретные, привилегированные роли видят все
-  const baseFilter = req.canSeeSecretTours
-    ? {}
-    : {
-        secretTour: false
-      };
+// const getAllTours = catchAsync(async (req, res, next) => {
+//   // Источник пользовательских фильтров: безопасная копия, если есть, иначе req.query (только чтение)
+//   const userQuery = req.safeQuery || req.query;
+//   // Публично скрываем секретные, привилегированные роли видят все
+//   const baseFilter = req.canSeeSecretTours
+//     ? {}
+//     : {
+//         secretTour: false
+//       };
 
-  // --- ВЫПОЛНЯЕМ ЗАПРОС --- //
-  const features = new APIFeatures(
-    Tour.find(baseFilter),
-    userQuery,
-    req.aliasQuery // сюда подаём "виртуальные" параметры
-  )
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
+//   // --- ВЫПОЛНЯЕМ ЗАПРОС --- //
+//   const features = new APIFeatures(
+//     Tour.find(baseFilter),
+//     userQuery,
+//     req.aliasQuery // сюда подаём "виртуальные" параметры
+//   )
+//     .filter()
+//     .sort()
+//     .limitFields()
+//     .paginate();
 
-  // валидация страницы теперь тут
-  await features.validatePage(Tour);
+//   // валидация страницы теперь тут
+//   await features.validatePage(Tour);
 
-  const tours = await features.query;
+//   const tours = await features.query;
 
-  // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: { tours }
-  });
-});
-
-// --- получить конкретный тур --- //
-const getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-
-  // если тур не нашелся пробрасываем ошибку в глобальный обработчик ошибок
-  if (!tour) {
-    return next(new AppError(404, 'No tour found with that ID'));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: { tour }
-  });
-});
-
+//   // --- ОТПРАВЛЯЕМ ОТВЕТ --- //
+//   res.status(200).json({
+//     status: 'success',
+//     results: tours.length,
+//     data: { tours }
+//   });
+// });
+const getAllTours = factory.getAll(Tour); // Получить всех туров
+const getTour = factory.getOne(Tour, { path: 'reviews' }); // получить конкретный тур + вложенные документы (populate)
 const createTour = factory.createOne(Tour); // создать конкретный тур
 const updateTour = factory.updateOne(Tour); // обновить конкретный тур
 const deleteTour = factory.deleteOne(Tour); // удалить конкретный тур

@@ -12,15 +12,18 @@ const { protect, restrictTo } = require('../controllers/authController');
 
 const router = express.Router({ mergeParams: true }); // mergeParams - добавляет параметры из родительского маршрута (объединяем их)
 
+// Защищаем все следующие роуты (чтобы не писать protect в каждом роуте)
+router.use(protect);
+
 router
   .route('/')
-  .get(protect, getAllReviews)
-  .post(protect, restrictTo('user'), setTourUserIds, createReview);
+  .get(getAllReviews)
+  .post(restrictTo('user'), setTourUserIds, createReview);
 
 router
   .route('/:id')
-  .get(protect, getReview)
-  .patch(protect, updateReview)
-  .delete(protect, restrictTo('user', 'admin'), deleteReview);
+  .get(getReview)
+  .patch(restrictTo('user', 'admin'), updateReview)
+  .delete(restrictTo('user', 'admin'), deleteReview);
 
 module.exports = router;

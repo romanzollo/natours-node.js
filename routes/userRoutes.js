@@ -35,15 +35,17 @@ router.post('/login', xss(), login);
 router.post('/forgot-password', xss(), forgotPassword);
 // :token — добавляем xss() чтобы очистить req.params.token
 router.patch('/reset-password/:token', xss(), resetPassword);
-router.patch('/update-my-password', protect, xss(), updatePassword);
-router.patch('/update-me', protect, xss(), updateMe);
-router.delete('/delete-me', protect, xss(), deleteMe);
-router.get('/me', protect, xss(), getMe, getUser);
 
-/**
- * Ниже — защищённые роуты (нужен токен)
- */
+// Защищаем все следующие роуты (чтобы не писать protect в каждом роуте)
 router.use(protect);
+
+router.patch('/update-my-password', xss(), updatePassword);
+router.patch('/update-me', xss(), updateMe);
+router.delete('/delete-me', xss(), deleteMe);
+router.get('/me', xss(), getMe, getUser);
+
+// Разрешаем доступ к следующим роутам только админам
+router.use(restrictTo('admin'));
 
 /**
  * CRUD пользователей — доступ по необходимости.
@@ -65,6 +67,6 @@ router
  * Админский маршрут для смены роли. Жёсткий whitelist реализован в контроллере:
  * он обновляет только поле role и валидирует его.
  */
-router.patch('/:id/role', xss(), restrictTo('admin'), updateUserRole);
+router.patch('/:id/role', xss(), updateUserRole);
 
 module.exports = router;

@@ -32,18 +32,20 @@ router.route('/top-5-cheap').get(aliasTopTours, getAllTours); // получит�
 router.use('/:tourId/reviews', reviewRouter);
 
 router.route('/tour-stats').get(getTourStats); // получить статистику по турам
-router.route('/monthly-plan/:year').get(getMonthlyPlan); // получить план по месяцам
+router
+  .route('/monthly-plan/:year')
+  .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan); // получить план по месяцам
 
 // ==================== СТАНДАРТНЫЕ РОУТЫ ====================
 router
   .route('/')
-  .get(protect, canSeeSecretTours, getAllTours) // получить все туры
-  .post(createTour); // создать новый тур
+  .get(getAllTours) // получить все туры
+  .post(protect, restrictTo('admin', 'lead-guide'), createTour); // создать новый тур
 
 router
   .route('/:id', xss())
   .get(getTour) // получить тур по id
-  .patch(updateTour) // обновить тур
+  .patch(protect, restrictTo('admin', 'lead-guide'), updateTour) // обновить тур
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour); // удалить тур
 
 module.exports = router;

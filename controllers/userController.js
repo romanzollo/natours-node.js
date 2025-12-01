@@ -64,6 +64,12 @@ const createUser = (req, res) => {
   });
 };
 
+// --- Получить свой профиль --- //
+const getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 const getAllUsers = factory.getAll(User); // Получить всех пользователей
 const getUser = factory.getOne(User); // Получить конкретного пользователя
 const updateUser = factory.updateOne(User); // Обновить пользователя (не обновлять пароль таким образом)
@@ -76,5 +82,6 @@ module.exports = {
   updateUser,
   deleteUser,
   updateMe,
-  deleteMe
+  deleteMe,
+  getMe
 };

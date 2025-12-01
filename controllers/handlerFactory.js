@@ -54,6 +54,24 @@ exports.getAll = (Model, customFilter = {}) =>
     });
   });
 
+// получить конкретный документ
+exports.getOne = (Model, populateOpts) =>
+  catchAsync(async (req, res, next) => {
+    let query = Model.findById(req.params.id); // поиск по id
+    if (populateOpts) query = query.populate(populateOpts); // добавление вложенных документов
+    const document = await query; // получение документа
+
+    // если тур не нашелся пробрасываем ошибку в глобальный обработчик ошибок
+    if (!document) {
+      return next(new AppError(404, 'No document found with that ID'));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: { data: document }
+    });
+  });
+
 // удалить конкретный документ
 exports.deleteOne = Model =>
   catchAsync(async (req, res, next) => {
@@ -95,23 +113,6 @@ exports.createOne = Model =>
     const document = await Model.create(req.body);
 
     res.status(201).json({
-      status: 'success',
-      data: { data: document }
-    });
-  });
-
-exports.getOne = (Model, populateOpts) =>
-  catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id); // поиск по id
-    if (populateOpts) query = query.populate(populateOpts); // добавление вложенных документов
-    const document = await query; // получение документа
-
-    // если тур не нашелся пробрасываем ошибку в глобальный обработчик ошибок
-    if (!document) {
-      return next(new AppError(404, 'No document found with that ID'));
-    }
-
-    res.status(200).json({
       status: 'success',
       data: { data: document }
     });

@@ -9,7 +9,8 @@ const {
   updateUser,
   deleteUser,
   updateMe,
-  deleteMe
+  deleteMe,
+  getMe
 } = require('../controllers/userController');
 const {
   signup,
@@ -37,6 +38,7 @@ router.patch('/reset-password/:token', xss(), resetPassword);
 router.patch('/update-my-password', protect, xss(), updatePassword);
 router.patch('/update-me', protect, xss(), updateMe);
 router.delete('/delete-me', protect, xss(), deleteMe);
+router.get('/me', protect, xss(), getMe, getUser);
 
 /**
  * Ниже — защищённые роуты (нужен токен)

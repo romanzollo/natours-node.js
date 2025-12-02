@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'User must have a name'],
     trim: true, // автоматически удаляет пробелы в начале и конце строки
-    maxlength: [15, 'A user name must have less or equal then 15 characters'],
+    maxlength: [20, 'A user name must have less or equal then 20 characters'],
     minlength: [3, 'A user name must have more or equal then 3 characters']
   },
   email: {

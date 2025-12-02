@@ -44,6 +44,7 @@ exports.getAll = (Model, customFilter = {}) =>
     // валидация страницы теперь тут
     await features.validatePage(Model);
 
+    // const documents = await features.query.explain(); // для теста индексов
     const documents = await features.query;
 
     // --- ОТПРАВЛЯЕМ ОТВЕТ --- //

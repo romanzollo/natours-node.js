@@ -1,8 +1,8 @@
 const Tour = require('../models/tourModel'); // импортируем модель
 const APIFeatures = require('../utils/apiFeatures');
-const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
+// const AppError = require('../utils/appError');
 
 // ==================== MIDDLEWARE ====================
 // middleware для получения 5 самых дешевых/популярных туров

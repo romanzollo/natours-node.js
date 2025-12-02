@@ -45,8 +45,12 @@ reviewSchema.pre(/^find/, function(next) {
 
   next();
 });
+
+// --- STATIC METHODS --- //
+// Считаем средний рейтинг тура
 reviewSchema.statics.calcAverageRatings = async function(tourId) {
   // Запускаем агрегирование по коллекции отзывов (Review)
+  // this - так как метод статический
   const stats = await this.aggregate([
     {
       // Оставляем в выборке только отзывы конкретного тура

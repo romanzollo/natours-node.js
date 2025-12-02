@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const Tour = require('./tourModel');
+
 const reviewSchema = new mongoose.Schema(
   {
     review: {
@@ -42,6 +44,44 @@ reviewSchema.pre(/^find/, function(next) {
   });
 
   next();
+});
+reviewSchema.statics.calcAverageRatings = async function(tourId) {
+  // Запускаем агрегирование по коллекции отзывов (Review)
+  const stats = await this.aggregate([
+    {
+      // Оставляем в выборке только отзывы конкретного тура
+      $match: {
+        tour: tourId
+      }
+    },
+    {
+      // Группируем все найденные отзывы по полю tour
+      $group: {
+        _id: '$tour', // группировка по id тура
+        nRating: {
+          $sum: 1 // считаем количество отзывов (каждый документ = 1)
+        },
+        avgRating: {
+          $avg: '$rating' // считаем среднее значение поля rating
+        }
+      }
+    }
+  ]);
+  console.log(stats);
+
+  // Обновляем сам тур: записываем количество и средний рейтинг
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats?.nRating || 0, // если отзывов нет, ставим 0
+    ratingsAverage: stats?.avgRating || 4.5 // и средний рейтинг 4.5
+  });
+};
+
+// post 'save' middleware срабатывает после сохранения нового отзыва
+reviewSchema.post('save', function() {
+  // this — это текущий документ Review
+  // this.constructor — это модель Review, у которой мы только что объявили статический метод calcAverageRatings
+  // Передаём id тура, к которому относится этот отзыв
+  this.constructor.calcAverageRatings(this.tour);
 });
 
 const Review = mongoose.model('Review', reviewSchema);

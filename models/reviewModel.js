@@ -71,12 +71,11 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
       }
     }
   ]);
-  console.log(stats);
 
   // Обновляем сам тур: записываем количество и средний рейтинг
   await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: stats?.nRating || 0, // если отзывов нет, ставим 0
-    ratingsAverage: stats?.avgRating || 4.5 // и средний рейтинг 4.5
+    ratingsQuantity: stats[0]?.nRating || 0, // если отзывов нет, ставим 0
+    ratingsAverage: stats[0]?.avgRating || 4.5 // и средний рейтинг 4.5
   });
 };
 
@@ -86,6 +85,20 @@ reviewSchema.post('save', function() {
   // this.constructor — это модель Review, у которой мы только что объявили статический метод calcAverageRatings
   // Передаём id тура, к которому относится этот отзыв
   this.constructor.calcAverageRatings(this.tour);
+});
+
+reviewSchema.pre(/^findOneAnd/, async function(next) {
+  this.r = await this.clone().findOne(); // чтобы передать id тура дальше через next()
+
+  next();
+});
+reviewSchema.post(/^findOneAnd/, async function(doc) {
+  // await this.clone().findOne() - это работать здесь небудет так как запрос уже выполнен
+
+  // doc - удалённый документ (не null), this.r может быть null при delete
+  if (doc?.tour) {
+    this.model.calcAverageRatings(doc.tour);
+  }
 });
 
 const Review = mongoose.model('Review', reviewSchema);

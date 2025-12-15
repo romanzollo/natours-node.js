@@ -2,7 +2,7 @@ const Tour = require('../models/tourModel'); // импортируем моде�
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
-// const AppError = require('../utils/appError');
+const AppError = require('../utils/appError');
 
 // ==================== MIDDLEWARE ====================
 // middleware для получения 5 самых дешевых/популярных туров
@@ -145,6 +145,41 @@ const getMonthlyPlan = catchAsync(async (req, res, next) => {
   });
 });
 
+// --- получаем туры в радиусе (agregation pipeline) --- //
+const getToursWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params; // distance-расстояние поиска, latlng - наши координаты, unit - единица измерения
+  const [lat, lng] = latlng.split(','); // разбиваем наши координаты
+
+  // maxDistance в МЕТРАХ для GeoJSON!
+  const maxDistance = unit === 'mi' ? distance * 1609.34 : distance * 1000;
+
+  if (!lat || !lng) {
+    return next(new AppError(400, 'Please provide lat,lng'));
+  }
+
+  // выполняем агрегацию
+  const tours = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [Number(lng), Number(lat)]
+        },
+        distanceField: 'distance', // расстояние в метрах
+        distanceMultiplier: unit === 'mi' ? 0.000621371 : 0.001, // конвертация в мили/км
+        spherical: true,
+        maxDistance: maxDistance // в МЕТРАХ!
+      }
+    }
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: { data: tours }
+  });
+});
+
 // ==================== ЭКСПОРТ ====================
 
 module.exports = {
@@ -155,5 +190,6 @@ module.exports = {
   deleteTour,
   aliasTopTours,
   getTourStats,
-  getMonthlyPlan
+  getMonthlyPlan,
+  getToursWithin
 };

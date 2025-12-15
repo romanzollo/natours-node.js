@@ -124,6 +124,7 @@ const tourSchema = new mongoose.Schema(
 // --- индексируем поля для быстрого поиска --- //
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' }); // индексируем географическое положение
 
 // Виртуальные поля
 tourSchema.virtual('durationWeeks').get(function() {

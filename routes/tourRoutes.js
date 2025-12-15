@@ -11,7 +11,8 @@ const {
   deleteTour,
   aliasTopTours,
   getTourStats,
-  getMonthlyPlan
+  getMonthlyPlan,
+  getToursWithin
 } = require('./../controllers/tourController');
 const { protect, restrictTo } = require('./../controllers/authController');
 const canSeeSecretTours = require('../middlewares/canSeeSecretTours');
@@ -35,6 +36,12 @@ router.route('/tour-stats').get(getTourStats); // получить статис�
 router
   .route('/monthly-plan/:year')
   .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan); // получить план по месяцам
+
+// /tours-within?distance=300&center=-35,50&unit=mi - вариант с query-параметрами
+// /tours-within/300/center/48.851821,2.348857/unit/mi - вариант с path-параметрами (наш вариант)
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(getToursWithin); // distance-расстояние поиска, center/:latlng - наши координаты, unit - единица измерения
 
 // ==================== СТАНДАРТНЫЕ РОУТЫ ====================
 router

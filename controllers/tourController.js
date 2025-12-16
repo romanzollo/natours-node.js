@@ -18,6 +18,22 @@ const aliasTopTours = (req, res, next) => {
   next();
 };
 
+// ===== Helpers (geo) =====
+// Разбирает строку "lat,lng" → { lat: Number, lng: Number }
+const parseLatLng = latlng => {
+  const [lat, lng] = latlng.split(',');
+  return {
+    lat: Number(lat),
+    lng: Number(lng)
+  };
+};
+
+// Конвертация расстояния из метров → мили (1м = 0.000621371ми) или км (1м = 0.001км)
+const getDistanceMultiplier = unit => (unit === 'mi' ? 0.000621371 : 0.001);
+// Конвертация заданного расстояния → метры для $geoNear (1миля = 1609.34м, 1км = 1000м)
+const getMaxDistanceInMeters = (distance, unit) =>
+  unit === 'mi' ? distance * 1609.34 : distance * 1000;
+
 // ==================== КОНТРОЛЛЕРЫ ====================
 
 // --- получить все туры --- //
@@ -145,38 +161,103 @@ const getMonthlyPlan = catchAsync(async (req, res, next) => {
   });
 });
 
-// --- получаем туры в радиусе (agregation pipeline) --- //
+// Получаем все туры в пределах distance от точки lat,lng
 const getToursWithin = catchAsync(async (req, res, next) => {
-  const { distance, latlng, unit } = req.params; // distance-расстояние поиска, latlng - наши координаты, unit - единица измерения
-  const [lat, lng] = latlng.split(','); // разбиваем наши координаты
+  const { distance, latlng, unit } = req.params; // из URL: /tours-within/:distance/center/:latlng/unit/:unit
 
-  // maxDistance в МЕТРАХ для GeoJSON!
-  const maxDistance = unit === 'mi' ? distance * 1609.34 : distance * 1000;
+  // Разбираем строку "lat,lng" в числа
+  const { lat, lng } = parseLatLng(latlng);
 
-  if (!lat || !lng) {
-    return next(new AppError(400, 'Please provide lat,lng'));
+  // Простая валидация координат
+  if (Number.isNaN(lat) || Number.isNaN(lng)) {
+    return next(
+      new AppError(
+        400,
+        'Please provide latitude and longitude in the format lat,lng.'
+      )
+    );
   }
 
-  // выполняем агрегацию
+  // distance → в метры, потому что $geoNear с GeoJSON ждёт maxDistance в метрах
+  const maxDistance = getMaxDistanceInMeters(Number(distance), unit);
+
+  // Множитель для перевода метров в мили или километры в результате
+  const distanceMultiplier = getDistanceMultiplier(unit);
+
+  // Geo-агрегация: ищем точки вокруг заданной координаты
   const tours = await Tour.aggregate([
     {
       $geoNear: {
+        // От какой точки считать расстояние
         near: {
           type: 'Point',
-          coordinates: [Number(lng), Number(lat)]
+          coordinates: [lng, lat] // ВАЖНО: [долгота, широта]
         },
-        distanceField: 'distance', // расстояние в метрах
-        distanceMultiplier: unit === 'mi' ? 0.000621371 : 0.001, // конвертация в мили/км
-        spherical: true,
-        maxDistance: maxDistance // в МЕТРАХ!
+        // В это поле Mongo запишет расстояние (до умножения — в метрах)
+        distanceField: 'distance',
+        // Ограничиваем радиус поиска (метры)
+        maxDistance,
+        // Конвертируем метры → ми/км прямо в результате
+        distanceMultiplier,
+        spherical: true // используем сферическую модель Земли
       }
     }
   ]);
 
+  // Отправляем ответ
   res.status(200).json({
     status: 'success',
     results: tours.length,
     data: { data: tours }
+  });
+});
+
+// Считаем расстояние от точки lat,lng до КАЖДОГО тура
+const getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params; // из URL: /distances/:latlng/unit/:unit
+
+  // Разбираем координаты
+  const { lat, lng } = parseLatLng(latlng);
+
+  // Валидация
+  if (Number.isNaN(lat) || Number.isNaN(lng)) {
+    return next(
+      new AppError(
+        400,
+        'Please provide latitude and longitude in the format lat,lng.'
+      )
+    );
+  }
+
+  // Множитель для перевода из метров в нужную единицу (мили или км)
+  const distanceMultiplier = getDistanceMultiplier(unit);
+
+  // Агрегация: считаем расстояние до КАЖДОГО тура
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng, lat] // [долгота, широта]
+        },
+        distanceField: 'distance', // поле, куда упадёт расстояние
+        distanceMultiplier, // конвертация метров в ми/км
+        spherical: true // используем сферическую модель Земли
+      }
+    },
+    {
+      // Берём только то, что нужно: расстояние и имя тура
+      $project: {
+        distance: 1,
+        name: 1
+      }
+    }
+  ]);
+
+  // Отправляем ответ
+  res.status(200).json({
+    status: 'success',
+    data: { data: distances }
   });
 });
 
@@ -191,5 +272,6 @@ module.exports = {
   aliasTopTours,
   getTourStats,
   getMonthlyPlan,
-  getToursWithin
+  getToursWithin,
+  getDistances
 };

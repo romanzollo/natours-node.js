@@ -12,7 +12,8 @@ const {
   aliasTopTours,
   getTourStats,
   getMonthlyPlan,
-  getToursWithin
+  getToursWithin,
+  getDistances
 } = require('./../controllers/tourController');
 const { protect, restrictTo } = require('./../controllers/authController');
 const canSeeSecretTours = require('../middlewares/canSeeSecretTours');
@@ -42,6 +43,9 @@ router
 router
   .route('/tours-within/:distance/center/:latlng/unit/:unit')
   .get(getToursWithin); // distance-расстояние поиска, center/:latlng - наши координаты, unit - единица измерения
+
+// /distances/48.851821,2.348857/unit/mi
+router.route('/distances/:latlng/unit/:unit').get(getDistances);
 
 // ==================== СТАНДАРТНЫЕ РОУТЫ ====================
 router

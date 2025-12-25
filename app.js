@@ -1,3 +1,4 @@
+const path = require('path'); // подключаем библиотеку path
 const express = require('express');
 // Подключаем библиотеку morgan — логгер HTTP-запросов (для отладки)
 const morgan = require('morgan');
@@ -22,8 +23,15 @@ const errorHandler = require('./middlewares/errorHandler');
 // Создаём экземпляр приложения Express
 const app = express();
 
+// Подключаем библиотеку PUG для работы с HTML-шаблонами
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 // ==================== GLOBAL MIDDLEWARE ====================
 // Middleware — функции, которые обрабатывают входящие запросы до того, как они попадут в маршруты
+
+// Загружаем автоматически статические файлы из папки public
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Логгируем информацию о запросах (метод, путь, статус, время) — только для режима разработки
 if (process.env.NODE_ENV === 'development') {
@@ -93,8 +101,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(`${__dirname}/public`));
-
 // Другой пример middleware: добавляем к запросу текущее время (для теста)
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // сохраняем время запроса в объекте req
@@ -103,6 +109,15 @@ app.use((req, res, next) => {
 });
 
 // ==================== МАРШРУТИЗАЦИЯ ====================
+
+// рендерим базовый шаблон PUG
+// base - имя шаблона base.pug
+app.get('/', (req, res) => {
+  res.status(200).render('base', {
+    tour: 'The Forest Hiker',
+    name: 'Roman'
+  });
+});
 
 // Подключаем маршруты для туров по префиксу '/api/v1/tours'
 // Все маршруты из tourRouter будут доступны с этого пути

@@ -15,6 +15,8 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 // Импортируем маршруты для отзывов из внешнего файла
 const reviewRouter = require('./routes/reviewRoutes');
+// Импортируем маршруты для работы с HTML-шаблонами (PUG)
+const viewRouter = require('./routes/viewRoutes');
 // Импортируем модуль для работы с ошибками
 const AppError = require('./utils/appError');
 // Импортируем глобальный обработчик ошибок
@@ -109,27 +111,8 @@ app.use((req, res, next) => {
 });
 
 // ==================== МАРШРУТИЗАЦИЯ ====================
-
-// рендерим базовый шаблон PUG
-// base - имя шаблона base.pug
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    tour: 'The Forest Hiker',
-    name: 'Roman'
-  });
-});
-
-app.get('/overview', (req, res) => {
-  res.status(200).render('overview', {
-    title: 'All Tours'
-  });
-});
-
-app.get('/tour', (req, res) => {
-  res.status(200).render('tour', {
-    title: 'The Forest Hiker'
-  });
-});
+// Подключаем маршруты для HTML-шаблонов
+app.use('/', viewRouter);
 
 // Подключаем маршруты для туров по префиксу '/api/v1/tours'
 // Все маршруты из tourRouter будут доступны с этого пути

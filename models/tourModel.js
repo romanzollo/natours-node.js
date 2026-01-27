@@ -107,10 +107,13 @@ const tourSchema = new mongoose.Schema(
         day: Number
       }
     ],
+    // Массив ID гидов (пользователей), которые ведут этот тур
+    // В БД хранится: ["64f...abc", "64f...def"] — просто ссылки на коллекцию users
+    // После populate: [{name: 'John', email: '...'}, {name: 'Jane', ...}]
     guides: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User' // Mongoose заменит ID на полные документы из модели User
       }
     ]
   },
@@ -124,17 +127,20 @@ const tourSchema = new mongoose.Schema(
 // --- индексируем поля для быстрого поиска --- //
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
-tourSchema.index({ startLocation: '2dsphere' }); // индексируем географическое положение
+tourSchema.index({ startLocation: '2dsphere' }); // индексируем географическое положение - геопоиск
 
 // Виртуальные поля
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
-// Virtual populate
+
+// ВИРТУАЛЬНОЕ ПОЛЕ reviews (НЕ хранится в БД)
+// Обратноe отношение: находит ВСЕ отзывы, где tour = this._id
+// Требует РУЧНОГО populate в контроллере: .populate('reviews')
 tourSchema.virtual('reviews', {
-  ref: 'Review',
-  foreignField: 'tour',
-  localField: '_id'
+  ref: 'Review', // модель Review
+  foreignField: 'tour', // в Review.schema есть поле: tour: ObjectId(ref: 'Tour')
+  localField: '_id' // связываем по ID этого тура
 });
 
 // --- MONGOOSE MIDDLEWARES --- //
@@ -145,6 +151,9 @@ tourSchema.pre('save', function(next) {
   next();
 });
 
+// Автоматический populate гидов ПРИ ВСЕХ запросах find()
+// Срабатывает ДО выполнения Tour.find(), Tour.findOne() и т.д.
+// Исключаем поле passwordChangedAt из выдаваемых данных пользователей
 tourSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'guides',

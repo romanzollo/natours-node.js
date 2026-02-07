@@ -21,9 +21,14 @@ const viewRouter = require('./routes/viewRoutes');
 const AppError = require('./utils/appError');
 // Импортируем глобальный обработчик ошибок
 const errorHandler = require('./middlewares/errorHandler');
+// Импортируем модуль для работы с переменными окружения
+require('dotenv').config();
 
 // Создаём экземпляр приложения Express
 const app = express();
+
+// Переменные окружения
+app.locals.yandexMapsKey = process.env.YANDEX_MAPS_KEY || ''; // ключ API Яндекс.Карт
 
 // Подключаем библиотеку PUG для работы с HTML-шаблонами
 app.set('view engine', 'pug');
@@ -41,7 +46,54 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Защита HTTP-заголовков
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          'https://api-maps.yandex.ru',
+          'https://yastatic.net',
+          'https://*.yandex.ru',
+          'https://suggest-maps.yandex.ru',
+          'https://core-renderer-tiles.maps.yandex.net'
+        ],
+        scriptSrcElem: [
+          "'self'",
+          'https://api-maps.yandex.ru',
+          'https://yastatic.net',
+          'https://*.yandex.ru',
+          'https://core-renderer-tiles.maps.yandex.net'
+        ],
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          'https://fonts.googleapis.com',
+          'https://api-maps.yandex.ru'
+        ],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        connectSrc: [
+          "'self'",
+          'https://api-maps.yandex.ru',
+          'https://suggest-maps.yandex.ru',
+          'https://core-renderer-tiles.maps.yandex.net'
+        ],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'https://*.yandex.ru',
+          'https://yastatic.net',
+          'https://*.yandex.net',
+          'https://core-renderer-tiles.maps.yandex.net',
+          'https://yandex.ru/*' // Wildcard для clck/counter
+        ]
+      }
+    }
+  })
+);
 
 // Реализуем лимит запросов
 const limiter = rateLimit({

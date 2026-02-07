@@ -1,5 +1,12 @@
 extends base
 
+//- Подключаем скрипт Mapbox в head layout'а
+block append head
+    //- script(src=`https://api-maps.yandex.ru/2.1/?apikey=${yandexMapsKey}&lang=ru_RU&ns=ymaps` type='text/javascript')
+    script(src=`https://api-maps.yandex.ru/2.1/?apikey=${yandexMapsKey}&lang=en_US&ns=ymaps` type='text/javascript')
+    script(src='/js/map.js')
+    
+
 block content 
     // - импортируем миксины
     include _reviewCard
@@ -10,7 +17,7 @@ block content
             .header__hero-overlay &nbsp;
             img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
 
-        .heading-box
+        .heading-box 
             h1.heading-primary
                 span #{tour.name} tour
             .heading-box__group
@@ -63,7 +70,7 @@ block content
                 img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}` class=`picture-box__img--${i + 1}`)
 
     section.section-map
-        #map
+        #map(data-locations=JSON.stringify(tour.locations))
 
     section.section-reviews
         .reviews
@@ -80,3 +87,5 @@ block content
                 h2.heading-secondary What are you waiting for?
                 p.cta__text #{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
                 button.btn.btn--green.span-all-rows Book tour now!
+
+    //- script(src='/js/map.js')

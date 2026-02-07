@@ -1,21 +1,26 @@
 doctype html
 html
-  head
-    meta(charset='UTF-8')
-    meta(name='viewport' content='width=device-width, initial-scale=1.0')
-    link(rel='stylesheet' href='/css/style.css')
-    link(rel='shortcut icon' type='image/png' href='/img/favicon.png')
-    link(href='https://fonts.googleapis.com/css?family=Lato:300,300i,700'
-      rel='stylesheet')
-    title Natours | #{title || 'Exciting tours for adventurous people'}
+    //- head: базовые мета-теги + стили + title (обязательные для всех страниц)
+    head
+    //- child-шаблоны добавляют сюда скрипты через "block append head"
+    block head
+        meta(charset='UTF-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1.0')
+        link(rel='stylesheet' href='/css/style.css')
+        link(rel='stylesheet' href='/css/map.css')
+        link(rel='shortcut icon' type='image/png' href='/img/favicon.png')
+        link(href='https://fonts.googleapis.com/css?family=Lato:300,300i,700'
+        rel='stylesheet')
+        //- title: данные из res.render('layout', { title: '...' }) из Express роутов
+        title Natours | #{title || 'Exciting tours for adventurous people'}
 
-  body
-    // HEADER
-    include _header
+    body
+        // HEADER
+        include _header
 
-    // CONTENT
-    block content
-        h1 This is the placeholder content
+        // CONTENT
+        block content
+            h1 This is the placeholder content
 
-    // FOOTER
-    include _footer
+        // FOOTER
+        include _footer

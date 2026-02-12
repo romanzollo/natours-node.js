@@ -8,6 +8,7 @@ const helmet = require('helmet'); // для защиты HTTP-headers
 // const mongoSanitize = require('express-mongo-sanitize'); // для санитизации входных данных
 const { xss } = require('express-xss-sanitizer'); // для санитизации входных данных
 const hpp = require('hpp'); // для предотвращения дублирования HTTP-параметров
+const cookieParser = require('cookie-parser');
 
 // Импортируем маршруты для туров из внешнего файла
 const tourRouter = require('./routes/tourRoutes');
@@ -59,14 +60,16 @@ app.use(
           'https://yastatic.net',
           'https://*.yandex.ru',
           'https://suggest-maps.yandex.ru',
-          'https://core-renderer-tiles.maps.yandex.net'
+          'https://core-renderer-tiles.maps.yandex.net',
+          'https://cdn.jsdelivr.net'
         ],
         scriptSrcElem: [
           "'self'",
           'https://api-maps.yandex.ru',
           'https://yastatic.net',
           'https://*.yandex.ru',
-          'https://core-renderer-tiles.maps.yandex.net'
+          'https://core-renderer-tiles.maps.yandex.net',
+          'https://cdn.jsdelivr.net'
         ],
         styleSrc: [
           "'self'",
@@ -79,7 +82,8 @@ app.use(
           "'self'",
           'https://api-maps.yandex.ru',
           'https://suggest-maps.yandex.ru',
-          'https://core-renderer-tiles.maps.yandex.net'
+          'https://core-renderer-tiles.maps.yandex.net',
+          'https://cdn.jsdelivr.net'
         ],
         imgSrc: [
           "'self'",
@@ -110,6 +114,8 @@ app.use(
     limit: '10kb' // ограничиваем размер тела запроса
   })
 );
+// анализируем данные из файлов cookie
+app.use(cookieParser());
 
 // санитизация входных данных для преотвращения XSS
 app.use(xss({ applyTo: { body: true, query: false, headers: true } }));
@@ -159,6 +165,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString(); // сохраняем время запроса в объекте req
 
+  console.log(req.cookies); // выводим cookies
   next();
 });
 

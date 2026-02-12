@@ -85,8 +85,8 @@ ymaps.ready(function() {
   // 2) Динамический верхний отступ под скос блока выше:
   // --section-rotate так как ~ 9vw, поэтому берём 9% ширины экрана + запас под маркер/хинт.
   const topMargin = Math.max(
-    90,
-    Math.min(260, Math.round(window.innerWidth * 0.09) + 50)
+    40,
+    Math.min(260, Math.round(window.innerWidth * 0.09) - 70)
   );
 
   // 3) “Не отдаляться слишком сильно”

@@ -61,10 +61,15 @@ const login = catchAsync(async (req, res, next) => {
 
 // --- ПРОВЕРКА ТОКЕНА --- //
 const protect = catchAsync(async (req, res, next) => {
-  // 1) whitelisting
-  const auth = req.headers.authorization || '';
-  const hasBearer = auth.startsWith('Bearer ');
-  const token = hasBearer ? auth.slice(7) : null;
+  // 1) whitelisting + cookie check
+  const authHeader = req.headers.authorization || '';
+  let token = null;
+
+  if (authHeader.startsWith('Bearer ')) {
+    token = authHeader.slice(7);
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
 
   if (!token) {
     return next(

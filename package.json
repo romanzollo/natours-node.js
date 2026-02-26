@@ -1,19 +1,23 @@
 {
   "name": "natours-node.js",
   "version": "1.0.0",
-  "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon server.js",
+    "dev": "nodemon",
     "dev:debug": "nodemon --inspect=9230 server.js",
-    "prod": "cross-env NODE_ENV=production nodemon server.js"
+    "prod": "cross-env NODE_ENV=production nodemon server.js",
+    "watch:js": "parcel watch public/js/global.js public/js/tour.js --dist-dir public/js/bundled --no-hmr",
+    "build:js": "parcel build public/js/global.js public/js/tour.js --dist-dir public/js/bundled",
+    "dev:full": "concurrently \"npm run dev\" \"npm run watch:js\""
   },
   "author": "Roman",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.13.5",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
+    "core-js": "^3.48.0",
     "dotenv": "^17.2.0",
     "express": "^5.2.1",
     "express-mongo-sanitize": "^2.2.0",
@@ -32,6 +36,8 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
+    "buffer": "^6.0.3",
+    "concurrently": "^9.2.1",
     "cross-env": "^7.0.3",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.1",
@@ -41,10 +47,16 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-react": "^7.37.5",
-    "nodemon": "^3.1.10",
+    "nodemon": "^3.1.14",
+    "parcel": "^2.16.4",
     "prettier": "^1.19.1"
   },
   "engines": {
     "node": ">=10.0.0"
-  }
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not dead"
+  ]
 }

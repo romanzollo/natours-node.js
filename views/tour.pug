@@ -4,7 +4,7 @@ extends base
 block append head
     //- script(src=`https://api-maps.yandex.ru/2.1/?apikey=${yandexMapsKey}&lang=ru_RU&ns=ymaps` type='text/javascript')
     script(src=`https://api-maps.yandex.ru/2.1/?apikey=${yandexMapsKey}&lang=en_US&ns=ymaps` type='text/javascript')
-    script(src='/js/map.js')
+    script(src="/js/bundled/tour.js" defer)
     
 
 block content 

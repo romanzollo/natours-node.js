@@ -4,12 +4,15 @@ const {
   getTour,
   getLoginForm
 } = require('../controllers/viewController');
-const { protect } = require('../controllers/authController');
+const { protect, isLoggedIn } = require('../controllers/authController');
 
 const router = express.Router();
 
+// предоставляем доступ к данным пользователя через middleware во всех маршрутах
+router.use(isLoggedIn);
+
 router.get('/', getOverview);
-router.get('/tour/:slug', protect, getTour);
+router.get('/tour/:slug', getTour);
 router.get('/login', getLoginForm);
 
 module.exports = router;

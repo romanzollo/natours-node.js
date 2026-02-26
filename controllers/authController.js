@@ -104,6 +104,47 @@ const protect = catchAsync(async (req, res, next) => {
   next(); // предоставляем доступ к защищенному маршруту
 });
 
+// --- ПРОВЕРКА ТОКЕНА ДЛЯ ОТРЕНДЕРЕННЫХ СТРАНИЦ --- //
+// Только для отрендеренных страниц, не выбрасывает ошибки
+// Если пользователь авторизован - добавляет данные в res.locals.user
+const isLoggedIn = async (req, res, next) => {
+  try {
+    // Проверяем наличие JWT токена в cookies
+    if (req.cookies.jwt) {
+      // 1) Верифицируем токен и декодируем его содержимое
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // 2) Проверяем существует ли пользователь с этим ID в базе данных
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        // Пользователь удален - переходим дальше без авторизации
+        return next();
+      }
+
+      // 3) Проверяем не сменил ли пользователь пароль после выдачи токена
+      // Если пароль изменен - токен больше не валиден
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        // Токен устарел - переходим дальше без авторизации
+        return next();
+      }
+
+      // 4) Все проверки пройдены - пользователь авторизован
+      // Делаем данные пользователя доступными в Pug шаблонах
+      res.locals.user = currentUser;
+      return next();
+    }
+    // Если токена нет в cookies - переходим дальше без авторизации
+    next();
+  } catch (err) {
+    // При любой ошибке (невалидный токен, проблемы с БД и т.д.)
+    // просто переходим дальше без авторизации, не прерываем рендеринг
+    next();
+  }
+};
+
 // --- ПРОВЕРКА ПРАВ ПОЛЬЗОВАТЕЛЯ --- //
 const restrictTo = (...roles) => {
   const allowed = roles.map(r => String(r).toLowerCase());
@@ -285,5 +326,6 @@ module.exports = {
   restrictTo,
   forgotPassword,
   resetPassword,
-  updatePassword
+  updatePassword,
+  isLoggedIn
 };

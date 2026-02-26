@@ -1,26 +1,43 @@
-const login = async (email, password) => {
-  console.log(email, password);
+import axios from 'axios';
+import { showAlert } from './alerts';
+
+export const login = async (email, password) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'http://127.0.0.1:3000/api/v1/users/login',
-      data: {
-        email,
-        password
-      }
+      url: '/api/v1/users/login',
+      data: { email, password }
     });
 
-    console.log(res);
+    if (res.data.status === 'success') {
+      showAlert('success', 'Logged in successfully!');
+      window.setTimeout(() => location.assign('/'), 1500);
+      return true;
+    }
   } catch (err) {
-    console.log(err.response.data);
+    showAlert('error', err.response?.data?.message || 'Something went wrong');
+    console.log(err);
+    return false;
   }
 };
 
-document.querySelector('.form').addEventListener('submit', event => {
-  event.preventDefault();
+// Инициализация вынесена отдельно — вызывается явно
+export const initLogin = () => {
+  const form = document.querySelector('.form');
+  if (!form) return;
 
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
 
-  login(email, password);
-});
+    const email = document.getElementById('email')?.value;
+    const password = document.getElementById('password')?.value;
+
+    if (email && password) await login(email, password);
+  });
+};
+
+// Авто-инициализация только если модуль загружен в нужном контексте
+// (опционально, можно убрать для полного контроля)
+if (document.querySelector('.form')) {
+  initLogin();
+}

@@ -86,7 +86,7 @@ body {
   background-color: #e0e0e0;
 }
 
-.alert {
+/* .alert {
   position: fixed;
   top: 0;
   left: 50%;
@@ -108,6 +108,34 @@ body {
 }
 .alert--error {
   background-color: #eb4d4b;
+} */
+
+.alert {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 9999;
+  padding: 1.2rem 1.8rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 1.4rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.alert--success {
+  background: linear-gradient(to right, #28b487, #55c57a);
+}
+
+.alert--error {
+  background: linear-gradient(to right, #eb4d4b, #ff6b6b);
+}
+
+.alert--hide {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .heading-secondary {

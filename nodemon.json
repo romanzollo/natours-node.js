@@ -1,0 +1,15 @@
+{
+  "watch": [
+    "server.js",
+    "app.js",
+    "controllers",
+    "routes",
+    "models",
+    "utils",
+    "middlewares",
+    "views"
+  ],
+  "ignore": ["public/js/bundled/*", "public/js/*.map", ".parcel-cache/*"],
+  "ext": "js,json,pug",
+  "exec": "node server.js"
+}

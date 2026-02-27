@@ -41,3 +41,16 @@ export const initLogin = () => {
 if (document.querySelector('.form')) {
   initLogin();
 }
+
+export const logout = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: '/api/v1/users/logout'
+    });
+    // Принудительная перезагрузка
+    if (res.data.status === 'success') location.reload();
+  } catch (error) {
+    showAlert('error', 'Error logging out! Try again.');
+  }
+};

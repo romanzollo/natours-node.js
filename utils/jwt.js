@@ -45,7 +45,7 @@ const createSendToken = (user, statusCode, res, options = {}) => {
         (process.env.JWT_COOKIE_EXPIRES_IN || 7) * 24 * 60 * 60 * 1000
     )
   };
-  res.cookie('jwt', token, cookieOptions);
+  res.cookie('jwt', token, cookieOptions); // устанавливаем Cookie с httpOnly JWT
 
   const body = {
     status: 'success',

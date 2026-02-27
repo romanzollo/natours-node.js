@@ -216,6 +216,11 @@ var _webImmediateJs = require("core-js/modules/web.immediate.js");
 var _loginJs = require("./login.js");
 document.addEventListener('DOMContentLoaded', ()=>{
     (0, _loginJs.initLogin)();
+    const logoutBtn = document.querySelector('.nav__el--logout');
+    if (logoutBtn) logoutBtn.addEventListener('click', async (e)=>{
+        e.preventDefault();
+        await (0, _loginJs.logout)();
+    });
 });
 
 },{"core-js/modules/es.regexp.flags.js":"kQxcO","core-js/modules/es.typed-array.set.js":"6XVOs","core-js/modules/web.immediate.js":"gqgOq","./login.js":"8DYcM"}],"kQxcO":[function(require,module,exports,__globalThis) {
@@ -1923,6 +1928,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "login", ()=>login);
 parcelHelpers.export(exports, "initLogin", ()=>initLogin);
+parcelHelpers.export(exports, "logout", ()=>logout);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
 var _alerts = require("./alerts");
@@ -1960,6 +1966,18 @@ const initLogin = ()=>{
 // Авто-инициализация только если модуль загружен в нужном контексте
 // (опционально, можно убрать для полного контроля)
 if (document.querySelector('.form')) initLogin();
+const logout = async ()=>{
+    try {
+        const res = await (0, _axiosDefault.default)({
+            method: 'GET',
+            url: '/api/v1/users/logout'
+        });
+        // Принудительная перезагрузка
+        if (res.data.status === 'success') location.reload();
+    } catch (error) {
+        (0, _alerts.showAlert)('error', 'Error logging out! Try again.');
+    }
+};
 
 },{"axios":"9QTOy","./alerts":"5ZxnT","@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY"}],"9QTOy":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");

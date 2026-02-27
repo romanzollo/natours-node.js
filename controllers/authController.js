@@ -59,6 +59,19 @@ const login = catchAsync(async (req, res, next) => {
   return createSendToken(user, 200, res); // токен и стандартизированный ответ
 });
 
+// --- ВЫХОД --- //
+const logout = catchAsync(async (req, res, next) => {
+  const cookieOptions = {
+    httpOnly: true, // cookie недоступна JS, защищает от XSS
+    secure: process.env.NODE_ENV === 'production', // только по HTTPS в проде
+    expires: new Date(Date.now() + 10 * 1000)
+  };
+
+  res.cookie('jwt', 'loggedout', cookieOptions);
+
+  res.status(200).json({ status: 'success' });
+});
+
 // --- ПРОВЕРКА ТОКЕНА --- //
 const protect = catchAsync(async (req, res, next) => {
   // 1) whitelisting + cookie check
@@ -322,6 +335,7 @@ const updatePassword = catchAsync(async (req, res, next) => {
 module.exports = {
   signup,
   login,
+  logout,
   protect,
   restrictTo,
   forgotPassword,

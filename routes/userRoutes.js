@@ -15,6 +15,7 @@ const {
 const {
   signup,
   login,
+  logout,
   protect,
   restrictTo,
   forgotPassword,
@@ -32,6 +33,7 @@ const router = express.Router();
  */
 router.post('/signup', xss(), signup);
 router.post('/login', xss(), login);
+router.get('/logout', logout);
 router.post('/forgot-password', xss(), forgotPassword);
 // :token — добавляем xss() чтобы очистить req.params.token
 router.patch('/reset-password/:token', xss(), resetPassword);

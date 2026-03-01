@@ -1,4 +1,4 @@
-27147
+27148
 120C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\resolve\test\module_dir\zmodules\bbb\package.json133976917547512406 0
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\text-table\test\doubledot.js133976917532458784 0
 109C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm5\internal\scheduler\async.js133976923753516299 0
@@ -35,7 +35,7 @@
 100C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2025\BinaryXor.js133976917560263799 0
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\features\instance\flat.js134164337474850293 0
 107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\internal\symbol\rxSubscriber.js133976923766495046 0
-62C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\.env134144485253186782 0
+62C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\.env134168695482267796 0
 106C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\yargs\build\lib\utils\obj-filter.js134161747959864262 0
 96C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\operator\skip.ts133976923796812067 0
 132C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-react\lib\rules\jsx-filename-extension.d.ts.map133976917560523655 0
@@ -75,7 +75,7 @@
 85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js134166954250754371 0
 89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\round.js133976923766455074 0
 130C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@mischnic\json-sourcemap\node_modules\json5\lib\register.js134159223864902690 0
-77C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\global.js134166954246335193 0
+77C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\global.js134166963089025695 0
 129C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@swc\helpers\_\_unsupported_iterable_to_array\package.json134159223876661392 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint\lib\rules\no-new-require.js133976923758612314 0
 151C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\esm\internal\observable\onErrorResumeNext.js134161747967690980 0
@@ -108,7 +108,7 @@
 93C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\wrap-ansi\package.json134161747958468720 0
 111C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint\node_modules\cross-spawn\lib\util133976923751609153 1
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2022\IteratorClose.js133976917579802490 0
-63C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views134151420279755669 1
+63C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views134168732163932955 1
 112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\full\typed-array\last-index-of.js134164337484917981 0
 110C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-import\node_modules\debug133976917528842881 1
 102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\caniuse-lite\data\regions\GT.js134159223878437795 0
@@ -328,9 +328,26 @@
 63C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\utils134069348900179683 1
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\is-string\test\index.js133976917525605014 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\es\lib\isLicensePlate.js134014912192249924 0
+73C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\error.pug134168744650596643 0
+88C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\ignore-by-default133991574990030921 1
+97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\whatwg-url\lib\URL-impl.js133991567337428608 0
+98C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\5\msFromTime.js133976917581657885 0
+152C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\types\internal\operators\bufferCount.d.ts.map134161747972609331 0
+106C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-react\lib\util\jsx.js133976917545429062 0
+114C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\add\observable\fromEventPattern.ts133976923790892287 0
+113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\wrap-ansi\node_modules\ansi-regex\index.js134161747958327109 0
+94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2022\max.js133976917581097315 0
+107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\prettier-linter-helpers\package.json133976917528277093 0
+97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\promise\domains\finally.js134108811861285325 0
+91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\Operator.ts133976923794182132 0
+112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mongoose\lib\options\schemaDateOptions.js133991567354971586 0
+101C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mute-stream\coverage\lcov.info133976923752436002 0
+76C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\cliui134161747959349807 1
+114C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2017\CreateListFromArrayLike.js133976917569987718 0
+94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operator\reduce.js133976923765717886 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mongoose\lib\collection.js133991567351274449 0
 92C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\yargs\locales\tr.json134161747961911866 0
-73C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\login.pug134153979911274438 0
+73C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\login.pug134168742808591237 0
 98C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\operators\first.ts133976923790647054 0
 93C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\extendAll.js133976923762034266 0
 103C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\bson\src\utils\web_byte_utils.ts133991567354796236 0
@@ -1736,22 +1753,6 @@
 81C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\cli-cursor133976923748700262 1
 80C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\ipaddr.js133971675430327173 1
 98C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\es\lib\isAscii.js134014912190795701 0
-88C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\ignore-by-default133991574990030921 1
-97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\whatwg-url\lib\URL-impl.js133991567337428608 0
-98C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\5\msFromTime.js133976917581657885 0
-152C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\types\internal\operators\bufferCount.d.ts.map134161747972609331 0
-106C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-react\lib\util\jsx.js133976917545429062 0
-114C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\add\observable\fromEventPattern.ts133976923790892287 0
-113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\wrap-ansi\node_modules\ansi-regex\index.js134161747958327109 0
-94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2022\max.js133976917581097315 0
-107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\prettier-linter-helpers\package.json133976917528277093 0
-97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\promise\domains\finally.js134108811861285325 0
-91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\Operator.ts133976923794182132 0
-112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mongoose\lib\options\schemaDateOptions.js133991567354971586 0
-101C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mute-stream\coverage\lcov.info133976923752436002 0
-76C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\cliui134161747959349807 1
-114C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2017\CreateListFromArrayLike.js133976917569987718 0
-94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operator\reduce.js133976923765717886 0
 110C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2022\Number\exponentiate.js133976917572619487 0
 107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\typed-array-byte-offset\package.json133976917526343091 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@parcel\packager-js\src\helpers.js134159223880734749 0
@@ -2039,7 +2040,6 @@
 79C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\entities134075384929846154 1
 143C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\cjs\internal\operators\catchError.js134161747962755588 0
 106C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\uri-js\dist\esnext\regexps-iri.d.ts133976917539233924 0
-84C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\shebang-regex133976900208744328 1
 81C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\sprintf-js133976923751329322 1
 119C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm2015\internal\operators\finalize.js.map133976923775525084 0
 88C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\unpipe\HISTORY.md133971675430387163 0
@@ -2886,8 +2886,6 @@
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\operator\publish.ts133976923794702195 0
 111C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2024\CompareArrayElements.js133976917568339558 0
 81C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\picocolors133976923748810184 1
-103C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2021\DateFromTime.js133976917570490432 0
-95C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\lib\isTaxID.js134014912192725280 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\helpers\isPrimitive.js133976917578735352 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\modules\es.map.group-by.js134164337465232402 0
 92C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\observable\if.js133976923761497229 0
@@ -3071,6 +3069,7 @@
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\add\operator\publishReplay.js133976923765317255 0
 119C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm2015\internal\testing\ColdObservable.js133976923756110473 0
 86C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\shebang-command133976900208724327 1
+84C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\shebang-regex133976900208744328 1
 137C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-react\lib\rules\no-unused-class-component-methods.js133976917548987201 0
 96C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\observable\if.js.map133976923776719685 0
 101C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\simple-update-notifier\LICENSE133991574989901901 0
@@ -4185,7 +4184,6 @@
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@swc\helpers\cjs\_export_star.cjs134159223868113250 0
 107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\internal\OuterSubscriber.js.map133976923780759266 0
 102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\tsconfig-paths\lib\options.d.ts133976917535345824 0
-91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\set-proto\index.d.ts133976917531008689 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\which-boxed-primitive\test133976917526003966 1
 118C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm2015\internal\scheduler\QueueAction.js133976923765427189 0
 106C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\which-boxed-primitive\test\index.js133976917526293124 0
@@ -4427,6 +4425,8 @@
 96C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@parcel\core\package.json134159223895817897 0
 96C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\lib\isSemVer.js134014912192618031 0
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\lib\isStrongPassword.js134014912192648017 0
+103C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2021\DateFromTime.js133976917570490432 0
+95C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\lib\isTaxID.js134014912192725280 0
 107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\node-addon-api\napi-inl.deprecated.h134159223865004693 0
 108C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-react\lib\util\props.js133976917549853929 0
 125C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm2015\internal\util\UnsubscriptionError.js.map133976923785365977 0
@@ -4685,7 +4685,7 @@
 113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm2015\internal\operators\filter.js133976923760071859 0
 85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\helmet\LICENSE134074505450867144 0
 95C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-shim-unscopables\test133976917526164039 1
-85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\middlewares\errorHandler.js134062413429185598 0
+85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\middlewares\errorHandler.js134168754854079650 0
 101C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\es\lib\isMimeType.js134014912192402840 0
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\operators\reduce.ts133976923795280439 0
 100C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\validator\es\lib\isNumeric.js134014912192471877 0
@@ -6488,6 +6488,7 @@
 134C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\src\internal\operators\reduce.ts134161747984212262 0
 103C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\actual\url-search-params134164337479844443 1
 93C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\set-proto\CHANGELOG.md133976917529399458 0
+91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\set-proto\index.d.ts133976917531008689 0
 103C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\add\operator\elementAt.d.ts133976923789570781 0
 87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\remove.js133976923766335130 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint\lib\util\logging.js133976923762332097 0
@@ -9487,9 +9488,6 @@
 114C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\internal\operators\windowToggle.ts133976923799715478 0
 96C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash.isinteger\index.js134050092307250713 0
 115C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\internal\observable\bindCallback.ts133976923787093230 0
-123C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@swc\helpers\esm\_class_static_private_method_get.js134159223872011304 0
-112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\features\object\iterate-values.js134164337483589065 0
-102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operators\concatMap.js.map133976923773679040 0
 87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\dotenv\README.md133976887176310525 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operator\pluck.js.map133976923781211682 0
 116C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\internal\operators\withLatestFrom.ts133976923799871204 0
@@ -9528,8 +9526,6 @@
 100C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2016\ToInteger.js133976917588322107 0
 93C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\deep-is\example\cmp.js133976917522440137 0
 107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\add\operator\bufferCount.ts133976923787458836 0
-93C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\takeWhile.js133976923767306263 0
-99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\math-intrinsics\CHANGELOG.md133971675431565694 0
 106C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\add\operator\bufferTime.ts133976923787548781 0
 102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\add\operator\concat.ts133976923788346485 0
 110C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\add\operator\defaultIfEmpty.ts133976923788989521 0
@@ -9690,6 +9686,9 @@
 101C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\object-inspect\readme.markdown133971675431747143 0
 100C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operators\concatMap.d.ts133976923788492046 0
 100C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-to-primitive\test\index.js133976917531679976 0
+123C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@swc\helpers\esm\_class_static_private_method_get.js134159223872011304 0
+112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\features\object\iterate-values.js134164337483589065 0
+102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operators\concatMap.js.map133976923773679040 0
 102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operators\concatMapTo.d.ts133976923788571986 0
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operators\concatMapTo.js.map133976923773719000 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operators\count.js133976923757299620 0
@@ -14148,6 +14147,8 @@
 120C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-react\node_modules\.bin\resolve.ps1133976917592004394 0
 101C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\stable\symbol\match.js134164337486131753 0
 92C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\media-typer\README.md133971675430367142 0
+93C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\takeWhile.js133976923767306263 0
+99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\math-intrinsics\CHANGELOG.md133971675431565694 0
 96C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\math-intrinsics\constants133971675431705617 1
 95C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\math-intrinsics\floor.js133971675430157257 0
 98C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\math-intrinsics\isFinite.js133971675430600938 0
@@ -15259,7 +15260,7 @@
 114C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\caniuse-lite\data\features\css-paint-api.js134159223874296990 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\sortedUniq.js133976923766828035 0
 89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\split.js133976923766858005 0
-87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\viewController.js134151426767329498 0
+87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\viewController.js134168755212833425 0
 90C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\spread.js133976923766877998 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-define-property\LICENSE133971675429937381 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\spreadFrom.js133976923766907991 0
@@ -22511,7 +22512,7 @@
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\es\typed-array\for-each.js134164337475324478 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\es\typed-array\from-hex.js134164337475989522 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\es\typed-array\includes.js134164337479158576 0
-87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\authController.js134166954196200095 0
+87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\authController.js134166963089025695 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\es\typed-array\index-of.js134164337479410923 0
 141C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\esm5\internal\observable\concat.js134161747963349272 0
 108C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\es\typed-array\int32-array.js134164337481655494 0

@@ -27,23 +27,49 @@ const handleValidationErrorDB = err => {
   return new AppError(400, messages);
 };
 
-const sendErrorDev = (err, res, code, status) => {
-  res.status(code).json({
-    status,
-    message: err.message || 'Internal Server Error',
-    // error: {
-    //   name: err.name,
-    //   code: err.code,
-    //   details: err.details
-    // },
-    error: err,
-    stack: err.stack
+const sendErrorDev = (err, req, res, code, status) => {
+  // API
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(code).json({
+      status,
+      message: err.message || 'Internal Server Error',
+      // error: {
+      //   name: err.name,
+      //   code: err.code,
+      //   details: err.details
+      // },
+      error: err,
+      stack: err.stack
+    });
+  }
+  // RENDERED WEBSITE
+  return res.status(code).render('error', {
+    title: 'Somthing went wrong!',
+    msg: err.message
   });
 };
 
-const sendErrorProd = (err, res, code, status) => {
-  // В продакшене не раскрываем внутренности.
-  // 4xx обычно операционные, 5xx — программные/непредвиденные.
+const sendErrorProd = (err, req, res, code, status) => {
+  // A) API
+  if (req.originalUrl.startsWith('/api')) {
+    // В продакшене не раскрываем внутренности.
+    // 4xx обычно операционные, 5xx — программные/непредвиденные.
+    const isOperational =
+      typeof err.isOperational === 'boolean'
+        ? err.isOperational
+        : String(code).startsWith('4');
+
+    console.log('ERROR 💥', `code: ${code}, error: ${err}`);
+
+    return res.status(code).json({
+      status,
+      message: isOperational
+        ? err.message || 'Bad Request'
+        : 'Internal Server Error'
+    });
+  }
+
+  // B) RENDERED WEBSITE
   const isOperational =
     typeof err.isOperational === 'boolean'
       ? err.isOperational
@@ -51,10 +77,10 @@ const sendErrorProd = (err, res, code, status) => {
 
   console.log('ERROR 💥', `code: ${code}, error: ${err}`);
 
-  res.status(code).json({
-    status,
-    message: isOperational
-      ? err.message || 'Bad Request'
+  return res.status(code).render('error', {
+    title: 'Something went wrong!',
+    msg: isOperational
+      ? err.message || 'Please try again later.'
       : 'Internal Server Error'
   });
 };
@@ -97,7 +123,7 @@ module.exports = (err, req, res, next) => {
 
   // в dev: возвращаем подробный JSON через sendErrorDev — удобно для отладки.
   if (env === 'development') {
-    return sendErrorDev(err, res, normalizedCode, status);
+    return sendErrorDev(err, req, res, normalizedCode, status);
   } else if (env === 'production') {
     // Тщательно копируем ошибку, сохраняя прототип и message/name
     let error = Object.create(Object.getPrototypeOf(err));
@@ -119,6 +145,6 @@ module.exports = (err, req, res, next) => {
     const status = String(code).startsWith('4') ? 'fail' : 'error';
 
     // в  prod: возвращаем безопасный JSON через sendErrorProd — не раскрываем стек и внутренности.
-    return sendErrorProd(error, res, code, status);
+    return sendErrorProd(error, req, res, code, status);
   }
 };

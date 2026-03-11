@@ -114,6 +114,8 @@ const protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = currentUser; // включаем в запрос все данные о пользователе (пригодится в будущем)
+  // Делаем данные пользователя доступными в Pug шаблонах
+  res.locals.user = currentUser;
   next(); // предоставляем доступ к защищенному маршруту
 });
 

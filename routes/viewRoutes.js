@@ -3,7 +3,8 @@ const {
   getOverview,
   getTour,
   getLoginForm,
-  getAccount
+  getAccount,
+  updateUserData
 } = require('../controllers/viewController');
 const { protect, isLoggedIn } = require('../controllers/authController');
 
@@ -13,5 +14,7 @@ router.get('/', isLoggedIn, getOverview);
 router.get('/tour/:slug', isLoggedIn, getTour);
 router.get('/login', isLoggedIn, getLoginForm);
 router.get('/account', protect, getAccount);
+
+router.post('/submit-user-data', updateUserData);
 
 module.exports = router;

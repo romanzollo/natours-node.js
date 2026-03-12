@@ -214,16 +214,26 @@ var _webImmediateJs = require("core-js/modules/web.immediate.js");
 // import 'regenerator-runtime/runtime'; // Раскомментировать, если нужно использовать async/await в старых браузерах
 // Явный импорт и вызов — зависимости видны!
 var _loginJs = require("./login.js");
+var _updateSettingsJs = require("./updateSettings.js");
 document.addEventListener('DOMContentLoaded', ()=>{
     (0, _loginJs.initLogin)();
+    // определяем элементы
     const logoutBtn = document.querySelector('.nav__el--logout');
+    const formUserData = document.querySelector('.form-user-data');
+    // добавляем обработчики событий
     if (logoutBtn) logoutBtn.addEventListener('click', async (e)=>{
         e.preventDefault();
         await (0, _loginJs.logout)();
     });
+    if (formUserData) formUserData.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        await (0, _updateSettingsJs.updateSettings)(name, email);
+    });
 });
 
-},{"core-js/modules/es.regexp.flags.js":"kQxcO","core-js/modules/es.typed-array.set.js":"6XVOs","core-js/modules/web.immediate.js":"gqgOq","./login.js":"8DYcM"}],"kQxcO":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/es.regexp.flags.js":"kQxcO","core-js/modules/es.typed-array.set.js":"6XVOs","core-js/modules/web.immediate.js":"gqgOq","./login.js":"8DYcM","./updateSettings.js":"1yRco"}],"kQxcO":[function(require,module,exports,__globalThis) {
 'use strict';
 var DESCRIPTORS = require("32574bd865b8e6e5");
 var defineBuiltInAccessor = require("ba3ead2b02aa5c9b");
@@ -6936,6 +6946,34 @@ const showAlert = (type = 'success', message = '')=>{
     window.setTimeout(hideAlert, ALERT_SHOW_TIME);
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY"}]},["5gXOQ"], "5gXOQ", "parcelRequire2b78", {})
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY"}],"1yRco":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "updateSettings", ()=>updateSettings);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _alerts = require("./alerts");
+const updateSettings = async (name, email)=>{
+    try {
+        const res = await (0, _axiosDefault.default)({
+            method: 'PATCH',
+            url: 'http://127.0.0.1:3001/api/v1/users/update-me',
+            data: {
+                name,
+                email
+            }
+        });
+        if (res.data.status === 'success') {
+            (0, _alerts.showAlert)('success', 'Data updated successfully!');
+            return true;
+        }
+    } catch (err) {
+        (0, _alerts.showAlert)('error', err.response?.data?.message || 'Something went wrong');
+        console.log(err);
+        return false;
+    }
+};
+
+},{"axios":"9QTOy","./alerts":"5ZxnT","@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY"}]},["5gXOQ"], "5gXOQ", "parcelRequire2b78", {})
 
 //# sourceMappingURL=global.js.map

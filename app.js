@@ -114,6 +114,10 @@ app.use(
     limit: '10kb' // ограничиваем размер тела запроса
   })
 );
+// Встроенный middleware: парсит тело входящих запросов из URL-encoded в объект req.body
+// Теперь мы можем получать данные из POST/PATCH и других запросов с URL-encoded
+// app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
 // анализируем данные из файлов cookie
 app.use(cookieParser());
 

@@ -72,10 +72,10 @@
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\text-table\package.json133976917521647701 0
 117C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@swc\helpers\cjs\_class_private_method_get.cjs134159223867412444 0
 113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\yargs\node_modules\strip-ansi\package.json134161747958508733 0
-85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js134177999269706665 0
+85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js134180835935365075 0
 89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\round.js133976923766455074 0
 130C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@mischnic\json-sourcemap\node_modules\json5\lib\register.js134159223864902690 0
-77C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\global.js134177997168738822 0
+77C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\global.js134180835933959851 0
 129C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@swc\helpers\_\_unsupported_iterable_to_array\package.json134159223876661392 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint\lib\rules\no-new-require.js133976923758612314 0
 151C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\esm\internal\observable\onErrorResumeNext.js134161747967690980 0
@@ -158,7 +158,7 @@
 111C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\full\dom-collections\for-each.js134164337475467432 0
 95C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\reduceRight.js133976923766237063 0
 116C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@babel\types\lib\converters\toKeyAlias.js.map134108811862741468 0
-75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled134177999269746646 1
+75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled134180835935401411 1
 112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@parcel\core\src\requests\EntryRequest.js134159223892484271 0
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\full\math\degrees.js134164337461880000 0
 67C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js134177087756294555 1
@@ -301,7 +301,7 @@
 67C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\server.js134162645921218849 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2025\StringToNumber.js133976917586320012 0
 126C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\aria-query\lib\etc\roles\graphics\graphicsObjectRole.js133976917545673718 0
-89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js.map134177999269736642 0
+89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js.map134180835935401411 0
 112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm5\internal\operators\mergeAll.js133976923763674373 0
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2016\IteratorValue.js133976917580173261 0
 88C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lmdb\dependencies134159223872448210 1
@@ -321,7 +321,7 @@
 101C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\internal\util\root.ts133976923795733420 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\supports-color\index.js133971679675239360 0
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\has-tostringtag\package.json133976917530098325 0
-85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\updateSettings.js134177999268357419 0
+85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\updateSettings.js134180820370484142 0
 91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\postcss-value-parser134159223864913365 1
 143C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\esm5\internal\observable\race.js.map134161747977117785 0
 75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\.bin134164340420869953 1
@@ -348,7 +348,7 @@
 110C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\_esm5\internal\util\isScheduler.js133976923763015914 0
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2018\IsConstructor.js133976917577090359 0
 109C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\internal\operators\timeout.js.map133976923784908380 0
-75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\account.pug134177999448543701 0
+75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\account.pug134180835533558230 0
 73C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\error.pug134168744650596643 0
 88C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\ignore-by-default133991574990030921 1
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\whatwg-url\lib\URL-impl.js133991567337428608 0
@@ -471,7 +471,7 @@
 78C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\routes\userRoutes.js134166942853932331 0
 78C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\routes\viewRoutes.js134177973577082074 0
 145C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\types\internal\operators\race.d.ts.map134161747977049955 0
-76C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\login.js134177997566097375 0
+76C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\login.js134180821058248108 0
 112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\internal\observable\dom\fetch.ts133976923790208495 0
 95C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\postcss\lib\comment.d.ts134075384929506352 0
 113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2016\OrdinaryGetPrototypeOf.js133976917582928235 0
@@ -534,7 +534,7 @@
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\internal\operators\share.d.ts133976923796439508 0
 113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\full\array\virtual\group-to-map.js134164337478500431 0
 91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\img\tours\tour-4-cover.jpg133755454870000000 0
-83C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js134166954250034777 0
+83C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js134180825423497413 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2021\Get.js133976917573408578 0
 92C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\yargs\locales\pl.json134161747961821306 0
 119C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\axobject-query\lib\etc\objects\RadioGroupRole.js133976917546318301 0
@@ -561,7 +561,7 @@
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\features\unescape.js134164337498591592 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\yargs\build\lib\typings134161747960521185 1
 108C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\modules\es.set.constructor.js134164337466317900 0
-87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js.map134166954250084756 0
+87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js.map134180825423517396 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\utility-types\CHANGELOG.md134159223865615895 0
 111C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\src\internal\operators\auditTime.ts133976923786960912 0
 165C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\concurrently\node_modules\rxjs\dist\types\internal\scheduler\performanceTimestampProvider.d.ts134161747983942377 0
@@ -1156,7 +1156,7 @@
 102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\which-boxed-primitive\.eslintrc133976917522203449 0
 107C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\object.values\test\implementation.js133976917527968427 0
 84C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\internal-slot133976917531208590 1
-78C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\css\style.css134166110999119563 0
+78C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\css\style.css134180839049456853 0
 113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\observable\FromEventObservable.js.map133976923776011125 0
 126C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@parcel\transformer-posthtml\lib\PostHTMLTransformer.js134159223877721871 0
 77C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\hasown133971675430996013 1

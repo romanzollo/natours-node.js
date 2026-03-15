@@ -86,6 +86,7 @@ body {
   background-color: #e0e0e0;
 }
 
+
 /* .alert {
   position: fixed;
   top: 0;
@@ -1329,4 +1330,40 @@ body {
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
+}
+
+
+/* Разрешаем спиннеру выходить за границы кнопки */
+.btn:disabled,
+button:disabled {
+  overflow: visible !important; /* 🔸 Важно для ::before */
+  position: relative;
+}
+
+/* Позиционирование спиннера */
+.btn:disabled::before,
+button:disabled::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;    
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  /* 🔸 Гарантируем, что спиннер поверх всего */
+  position: relative;
+  z-index: 1;
+}
+
+/* Для белых кнопок — тёмный спиннер */
+.btn--white:disabled::before {
+  border-color: rgba(0, 0, 0, 0.3);
+  border-top-color: #333;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

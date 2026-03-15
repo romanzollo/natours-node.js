@@ -208,32 +208,75 @@
     }
   }
 })({"5gXOQ":[function(require,module,exports,__globalThis) {
-var _esRegexpFlagsJs = require("core-js/modules/es.regexp.flags.js"); // console.log('Global bundle loaded!');
+// global.js
+var _esRegexpFlagsJs = require("core-js/modules/es.regexp.flags.js");
 var _esTypedArraySetJs = require("core-js/modules/es.typed-array.set.js");
 var _webImmediateJs = require("core-js/modules/web.immediate.js");
-// import 'regenerator-runtime/runtime'; // Раскомментировать, если нужно использовать async/await в старых браузерах
-// Явный импорт и вызов — зависимости видны!
 var _loginJs = require("./login.js");
 var _updateSettingsJs = require("./updateSettings.js");
+var _alertsJs = require("./alerts.js");
+// 🔹 Хелпер: безопасное изменение состояния кнопки
+const setButtonLoading = (btn, loading, originalText)=>{
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Updating...' : originalText;
+};
 document.addEventListener('DOMContentLoaded', ()=>{
     (0, _loginJs.initLogin)();
-    // определяем элементы
-    const logoutBtn = document.querySelector('.nav__el--logout');
-    const formUserData = document.querySelector('.form-user-data');
-    // добавляем обработчики событий
-    if (logoutBtn) logoutBtn.addEventListener('click', async (e)=>{
+    // 🔹 Logout
+    document.querySelector('.nav__el--logout')?.addEventListener('click', async (e)=>{
         e.preventDefault();
         await (0, _loginJs.logout)();
     });
+    // 🔹 Форма профиля
+    const formUserData = document.querySelector('.form-user-data');
     if (formUserData) formUserData.addEventListener('submit', async (e)=>{
         e.preventDefault();
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        await (0, _updateSettingsJs.updateSettings)(name, email);
+        // 🔸 Ищем кнопку: по type или по классу .btn
+        const btn = formUserData.querySelector('button[type="submit"]') || formUserData.querySelector('.btn');
+        const originalText = btn ? btn.textContent.trim() : 'Save settings';
+        setButtonLoading(btn, true, originalText);
+        try {
+            const name = document.getElementById('name')?.value.trim();
+            const email = document.getElementById('email')?.value.trim();
+            await (0, _updateSettingsJs.updateSettings)({
+                name,
+                email
+            }, 'data');
+        // ✅ НЕ сбрасываем форму — поля остаются с новыми данными
+        } finally{
+            setButtonLoading(btn, false, originalText);
+        }
+    });
+    // 🔹 Форма пароля
+    const userPasswordForm = document.querySelector('.form-user-password');
+    if (userPasswordForm) userPasswordForm.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const btn = userPasswordForm.querySelector('button[type="submit"]') || userPasswordForm.querySelector('.btn');
+        const originalText = btn ? btn.textContent.trim() : 'Save password';
+        setButtonLoading(btn, true, originalText);
+        try {
+            const passwordCurrent = document.getElementById('password-current')?.value;
+            const password = document.getElementById('password')?.value;
+            const passwordConfirm = document.getElementById('password-confirm')?.value;
+            if (password !== passwordConfirm) {
+                (0, _alertsJs.showAlert)('error', 'New passwords do not match!');
+                return;
+            }
+            await (0, _updateSettingsJs.updateSettings)({
+                passwordCurrent,
+                password,
+                passwordConfirm
+            }, 'password');
+            // ✅ Сбрасываем ТОЛЬКО форму пароля
+            userPasswordForm.reset();
+        } finally{
+            setButtonLoading(btn, false, originalText);
+        }
     });
 });
 
-},{"core-js/modules/es.regexp.flags.js":"kQxcO","core-js/modules/es.typed-array.set.js":"6XVOs","core-js/modules/web.immediate.js":"gqgOq","./login.js":"8DYcM","./updateSettings.js":"1yRco"}],"kQxcO":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/es.regexp.flags.js":"kQxcO","core-js/modules/es.typed-array.set.js":"6XVOs","core-js/modules/web.immediate.js":"gqgOq","./login.js":"8DYcM","./updateSettings.js":"1yRco","./alerts.js":"5ZxnT"}],"kQxcO":[function(require,module,exports,__globalThis) {
 'use strict';
 var DESCRIPTORS = require("32574bd865b8e6e5");
 var defineBuiltInAccessor = require("ba3ead2b02aa5c9b");
@@ -1941,55 +1984,46 @@ parcelHelpers.export(exports, "initLogin", ()=>initLogin);
 parcelHelpers.export(exports, "logout", ()=>logout);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _alerts = require("./alerts");
+var _alertsJs = require("./alerts.js");
 const login = async (email, password)=>{
     try {
-        const res = await (0, _axiosDefault.default)({
-            method: 'POST',
-            url: '/api/v1/users/login',
-            data: {
-                email,
-                password
-            }
+        const res = await (0, _axiosDefault.default).post('/api/v1/users/login', {
+            email,
+            password
         });
         if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Logged in successfully!');
-            window.setTimeout(()=>location.assign('/'), 1500);
+            (0, _alertsJs.showAlert)('success', 'Logged in successfully!');
+            setTimeout(()=>location.href = '/', 1500);
             return true;
         }
     } catch (err) {
-        (0, _alerts.showAlert)('error', err.response?.data?.message || 'Something went wrong');
-        console.log(err);
-        return false;
+        (0, _alertsJs.showAlert)('error', err.response?.data?.message || 'Login failed');
     }
+    return false;
 };
 const initLogin = ()=>{
     const form = document.querySelector('.form');
     if (!form) return;
     form.addEventListener('submit', async (e)=>{
         e.preventDefault();
-        const email = document.getElementById('email')?.value;
+        const email = document.getElementById('email')?.value.trim();
         const password = document.getElementById('password')?.value;
-        if (email && password) await login(email, password);
+        if (email && password) {
+            const success = await login(email, password);
+            if (success) form.reset(); // Очищаем форму после входа
+        }
     });
 };
-// Авто-инициализация только если модуль загружен в нужном контексте
-// (опционально, можно убрать для полного контроля)
-if (document.querySelector('.form')) initLogin();
 const logout = async ()=>{
     try {
-        const res = await (0, _axiosDefault.default)({
-            method: 'GET',
-            url: '/api/v1/users/logout'
-        });
-        // Принудительная перезагрузка
-        if (res.data.status === 'success') location.reload();
-    } catch (error) {
-        (0, _alerts.showAlert)('error', 'Error logging out! Try again.');
+        const res = await (0, _axiosDefault.default).get('/api/v1/users/logout');
+        if (res.data.status === 'success') location.reload(true);
+    } catch  {
+        (0, _alertsJs.showAlert)('error', 'Error logging out! Try again.');
     }
 };
 
-},{"axios":"9QTOy","./alerts":"5ZxnT","@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY"}],"9QTOy":[function(require,module,exports,__globalThis) {
+},{"axios":"9QTOy","@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY","./alerts.js":"5ZxnT"}],"9QTOy":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>(0, _axiosJsDefault.default));
@@ -6952,28 +6986,25 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "updateSettings", ()=>updateSettings);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _alerts = require("./alerts");
-const updateSettings = async (name, email)=>{
+var _alertsJs = require("./alerts.js");
+const ENDPOINTS = {
+    data: '/api/v1/users/update-me',
+    password: '/api/v1/users/update-my-password'
+};
+const updateSettings = async (data, type)=>{
     try {
-        const res = await (0, _axiosDefault.default)({
-            method: 'PATCH',
-            url: 'http://127.0.0.1:3001/api/v1/users/update-me',
-            data: {
-                name,
-                email
-            }
-        });
+        const res = await (0, _axiosDefault.default).patch(ENDPOINTS[type], data);
         if (res.data.status === 'success') {
-            (0, _alerts.showAlert)('success', 'Data updated successfully!');
+            const label = type === 'password' ? 'Password' : 'Profile';
+            (0, _alertsJs.showAlert)('success', `${label} updated successfully!`);
             return true;
         }
     } catch (err) {
-        (0, _alerts.showAlert)('error', err.response?.data?.message || 'Something went wrong');
-        console.log(err);
-        return false;
+        (0, _alertsJs.showAlert)('error', err.response?.data?.message || 'Something went wrong');
     }
+    return false;
 };
 
-},{"axios":"9QTOy","./alerts":"5ZxnT","@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY"}]},["5gXOQ"], "5gXOQ", "parcelRequire2b78", {})
+},{"axios":"9QTOy","@parcel/transformer-js/src/esmodule-helpers.js":"cGvcY","./alerts.js":"5ZxnT"}]},["5gXOQ"], "5gXOQ", "parcelRequire2b78", {})
 
 //# sourceMappingURL=global.js.map

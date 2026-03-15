@@ -1,27 +1,21 @@
 import axios from 'axios';
-import { showAlert } from './alerts';
+import { showAlert } from './alerts.js';
 
 export const login = async (email, password) => {
   try {
-    const res = await axios({
-      method: 'POST',
-      url: '/api/v1/users/login',
-      data: { email, password }
-    });
+    const res = await axios.post('/api/v1/users/login', { email, password });
 
     if (res.data.status === 'success') {
       showAlert('success', 'Logged in successfully!');
-      window.setTimeout(() => location.assign('/'), 1500);
+      setTimeout(() => (location.href = '/'), 1500);
       return true;
     }
   } catch (err) {
-    showAlert('error', err.response?.data?.message || 'Something went wrong');
-    console.log(err);
-    return false;
+    showAlert('error', err.response?.data?.message || 'Login failed');
   }
+  return false;
 };
 
-// Инициализация вынесена отдельно — вызывается явно
 export const initLogin = () => {
   const form = document.querySelector('.form');
   if (!form) return;
@@ -29,28 +23,23 @@ export const initLogin = () => {
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
-    const email = document.getElementById('email')?.value;
+    const email = document.getElementById('email')?.value.trim();
     const password = document.getElementById('password')?.value;
 
-    if (email && password) await login(email, password);
+    if (email && password) {
+      const success = await login(email, password);
+      if (success) form.reset(); // Очищаем форму после входа
+    }
   });
 };
 
-// Авто-инициализация только если модуль загружен в нужном контексте
-// (опционально, можно убрать для полного контроля)
-if (document.querySelector('.form')) {
-  initLogin();
-}
-
 export const logout = async () => {
   try {
-    const res = await axios({
-      method: 'GET',
-      url: '/api/v1/users/logout'
-    });
-    // Принудительная перезагрузка
-    if (res.data.status === 'success') location.reload();
-  } catch (error) {
+    const res = await axios.get('/api/v1/users/logout');
+    if (res.data.status === 'success') {
+      location.reload(true);
+    }
+  } catch {
     showAlert('error', 'Error logging out! Try again.');
   }
 };

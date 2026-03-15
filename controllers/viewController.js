@@ -46,7 +46,3 @@ exports.getAccount = catchAsync(async (req, res) => {
     title: 'Your account'
   });
 });
-
-exports.updateUserData = catchAsync(async (req, res, next) => {
-  console.log('UPDATING USER DATA', req.body);
-});

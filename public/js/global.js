@@ -1,10 +1,9 @@
-// global.js
 import 'core-js/stable';
 import { initLogin, logout } from './login.js';
 import { updateSettings } from './updateSettings.js';
 import { showAlert } from './alerts.js';
 
-// 🔹 Хелпер: безопасное изменение состояния кнопки
+// Хелпер: безопасное изменение состояния кнопки
 const setButtonLoading = (btn, loading, originalText) => {
   if (!btn) return;
   btn.disabled = loading;
@@ -14,7 +13,7 @@ const setButtonLoading = (btn, loading, originalText) => {
 document.addEventListener('DOMContentLoaded', () => {
   initLogin();
 
-  // 🔹 Logout
+  // Logout
   document
     .querySelector('.nav__el--logout')
     ?.addEventListener('click', async e => {
@@ -22,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
       await logout();
     });
 
-  // 🔹 Форма профиля
+  //-- Форма профиля --//
   const formUserData = document.querySelector('.form-user-data');
   if (formUserData) {
     formUserData.addEventListener('submit', async e => {
       e.preventDefault();
 
-      // 🔸 Ищем кнопку: по type или по классу .btn
+      // Ищем кнопку: по type или по классу .btn
       const btn =
         formUserData.querySelector('button[type="submit"]') ||
         formUserData.querySelector('.btn');
@@ -41,14 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email')?.value.trim();
 
         await updateSettings({ name, email }, 'data');
-        // ✅ НЕ сбрасываем форму — поля остаются с новыми данными
+        // форму с именем и email не сбрасуем — поля остаются с новыми данными
       } finally {
         setButtonLoading(btn, false, originalText);
       }
     });
   }
 
-  // 🔹 Форма пароля
+  //-- Форма пароля --//
   const userPasswordForm = document.querySelector('.form-user-password');
   if (userPasswordForm) {
     userPasswordForm.addEventListener('submit', async e => {
@@ -78,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
           'password'
         );
 
-        // ✅ Сбрасываем ТОЛЬКО форму пароля
+        // Сбрасываем ТОЛЬКО форму пароля
         userPasswordForm.reset();
       } finally {
         setButtonLoading(btn, false, originalText);

@@ -1336,7 +1336,7 @@ body {
 /* Разрешаем спиннеру выходить за границы кнопки */
 .btn:disabled,
 button:disabled {
-  overflow: visible !important; /* 🔸 Важно для ::before */
+  overflow: visible !important; /* Важно для ::before */
   position: relative;
 }
 
@@ -1353,7 +1353,7 @@ button:disabled::before {
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
   vertical-align: middle;
-  /* 🔸 Гарантируем, что спиннер поверх всего */
+  /* Гарантируем, что спиннер поверх всего */
   position: relative;
   z-index: 1;
 }

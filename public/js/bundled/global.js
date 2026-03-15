@@ -208,14 +208,13 @@
     }
   }
 })({"5gXOQ":[function(require,module,exports,__globalThis) {
-// global.js
 var _esRegexpFlagsJs = require("core-js/modules/es.regexp.flags.js");
 var _esTypedArraySetJs = require("core-js/modules/es.typed-array.set.js");
 var _webImmediateJs = require("core-js/modules/web.immediate.js");
 var _loginJs = require("./login.js");
 var _updateSettingsJs = require("./updateSettings.js");
 var _alertsJs = require("./alerts.js");
-// 🔹 Хелпер: безопасное изменение состояния кнопки
+// Хелпер: безопасное изменение состояния кнопки
 const setButtonLoading = (btn, loading, originalText)=>{
     if (!btn) return;
     btn.disabled = loading;
@@ -223,16 +222,16 @@ const setButtonLoading = (btn, loading, originalText)=>{
 };
 document.addEventListener('DOMContentLoaded', ()=>{
     (0, _loginJs.initLogin)();
-    // 🔹 Logout
+    // Logout
     document.querySelector('.nav__el--logout')?.addEventListener('click', async (e)=>{
         e.preventDefault();
         await (0, _loginJs.logout)();
     });
-    // 🔹 Форма профиля
+    //-- Форма профиля --//
     const formUserData = document.querySelector('.form-user-data');
     if (formUserData) formUserData.addEventListener('submit', async (e)=>{
         e.preventDefault();
-        // 🔸 Ищем кнопку: по type или по классу .btn
+        // Ищем кнопку: по type или по классу .btn
         const btn = formUserData.querySelector('button[type="submit"]') || formUserData.querySelector('.btn');
         const originalText = btn ? btn.textContent.trim() : 'Save settings';
         setButtonLoading(btn, true, originalText);
@@ -243,12 +242,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 name,
                 email
             }, 'data');
-        // ✅ НЕ сбрасываем форму — поля остаются с новыми данными
+        // форму с именем и email не сбрасуем — поля остаются с новыми данными
         } finally{
             setButtonLoading(btn, false, originalText);
         }
     });
-    // 🔹 Форма пароля
+    //-- Форма пароля --//
     const userPasswordForm = document.querySelector('.form-user-password');
     if (userPasswordForm) userPasswordForm.addEventListener('submit', async (e)=>{
         e.preventDefault();
@@ -268,7 +267,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 password,
                 passwordConfirm
             }, 'password');
-            // ✅ Сбрасываем ТОЛЬКО форму пароля
+            // Сбрасываем ТОЛЬКО форму пароля
             userPasswordForm.reset();
         } finally{
             setButtonLoading(btn, false, originalText);

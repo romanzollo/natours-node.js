@@ -1,7 +1,38 @@
+const multer = require('multer'); // для загрузки пользовательских img
+
 const User = require('../models/userModel'); // импортируем модель
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
+
+// --- создаем middleware multer --- //
+// определяем и настраиваем хранилище файлов
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/users');
+  },
+  // формируем название
+  filename: (req, file, cb) => {
+    // user-id-time (leo-3253252dgc33w3wc-32525325325325325.jpeg)
+    const ext = file.mimetype.split('/')[1]; // достаем расширения файла
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  }
+});
+// определяем фильтр соответствия файла (в данном случае только 'image')
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError(400, 'Not an image! Please upload only images.'), false);
+  }
+};
+// формируем загрузку с нашими настройками
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
+// создаем middleware для загрузки изображения и используем его в контроллере
+const uploadUserPhoto = upload.single('photo');
 
 // Функция для фильтрации ненужных полей
 const filterObj = (obj, ...allowed) => {
@@ -15,6 +46,9 @@ const filterObj = (obj, ...allowed) => {
 
 // --- Обновить свой профиль --- //
 const updateMe = catchAsync(async (req, res, next) => {
+  console.log(req.file);
+  console.log(req.body);
+
   // Позволяем менять только эти поля
   const ALLOWED_FIELDS = ['name', 'email'];
 
@@ -83,5 +117,6 @@ module.exports = {
   deleteUser,
   updateMe,
   deleteMe,
-  getMe
+  getMe,
+  uploadUserPhoto
 };

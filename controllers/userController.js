@@ -1,4 +1,5 @@
 const multer = require('multer'); // для загрузки пользовательских img
+const sharp = require('sharp'); // для обработки и ресайза изображений
 
 const User = require('../models/userModel'); // импортируем модель
 const catchAsync = require('../utils/catchAsync');
@@ -7,17 +8,19 @@ const factory = require('./handlerFactory'); // импортируем фабр�
 
 // --- создаем middleware multer --- //
 // определяем и настраиваем хранилище файлов
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/img/users');
-  },
-  // формируем название
-  filename: (req, file, cb) => {
-    // user-id-time (leo-3253252dgc33w3wc-32525325325325325.jpeg)
-    const ext = file.mimetype.split('/')[1]; // достаем расширения файла
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  }
-});
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'public/img/users');
+//   },
+//   // формируем название
+//   filename: (req, file, cb) => {
+//     // user-id-time (leo-3253252dgc33w3wc-32525325325325325.jpeg)
+//     const ext = file.mimetype.split('/')[1]; // достаем расширения файла
+//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//   }
+// });
+const multerStorage = multer.memoryStorage(); // сохраняем изображение в буффер
+
 // определяем фильтр соответствия файла (в данном случае только 'image')
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -29,10 +32,29 @@ const multerFilter = (req, file, cb) => {
 // формируем загрузку с нашими настройками
 const upload = multer({
   storage: multerStorage,
-  fileFilter: multerFilter
+  fileFilter: multerFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // макс. 5 МБ
+  }
 });
 // создаем middleware для загрузки изображения и используем его в контроллере
 const uploadUserPhoto = upload.single('photo');
+
+// создаем middleware для формирования изображения юзера с нкжными нам параметрами
+const resizeUserPhoto = (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+  // берем изображение из буффера и настраиваем
+  sharp(req.file.buffer)
+    .resize(500, 500) // размер (квадрат)
+    .toFormat('jpeg') // формат
+    .jpeg({ quality: 90 }) // качество
+    .toFile(`public/img/users/${req.file.filename}`); // преобразуем в фаил и отправляем в нужную папку
+
+  next();
+};
 
 // Функция для фильтрации ненужных полей
 const filterObj = (obj, ...allowed) => {
@@ -46,9 +68,6 @@ const filterObj = (obj, ...allowed) => {
 
 // --- Обновить свой профиль --- //
 const updateMe = catchAsync(async (req, res, next) => {
-  console.log(req.file);
-  console.log(req.body);
-
   // Позволяем менять только эти поля
   const ALLOWED_FIELDS = ['name', 'email'];
 
@@ -60,7 +79,8 @@ const updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Жёсткая фильтрация входных полей
-  const data = filterObj(req.body, ...ALLOWED_FIELDS);
+  const data = filterObj(req.body, ...ALLOWED_FIELDS); // { name, email }
+  if (req.file) data.photo = req.file.filename; // добавляем photo, если есть файл
 
   // 3) Если email меняется — можно пометить как неподтверждённый/завести pendingEmail и отправить письмо
   //    Пример: if (data.email) { data.pendingEmail = data.email; delete data.email; /* send verify */ }
@@ -118,5 +138,6 @@ module.exports = {
   updateMe,
   deleteMe,
   getMe,
-  uploadUserPhoto
+  uploadUserPhoto,
+  resizeUserPhoto
 };

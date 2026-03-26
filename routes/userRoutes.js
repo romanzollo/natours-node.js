@@ -11,7 +11,8 @@ const {
   updateMe,
   deleteMe,
   getMe,
-  uploadUserPhoto
+  uploadUserPhoto,
+  resizeUserPhoto
 } = require('../controllers/userController');
 const {
   signup,
@@ -43,7 +44,7 @@ router.patch('/reset-password/:token', xss(), resetPassword);
 router.use(protect);
 
 router.patch('/update-my-password', xss(), updatePassword);
-router.patch('/update-me', xss(), uploadUserPhoto, updateMe);
+router.patch('/update-me', xss(), uploadUserPhoto, resizeUserPhoto, updateMe);
 router.delete('/delete-me', xss(), deleteMe);
 router.get('/me', xss(), getMe, getUser);
 

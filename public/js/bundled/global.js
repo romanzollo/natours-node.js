@@ -234,14 +234,23 @@ document.addEventListener('DOMContentLoaded', ()=>{
         // Ищем кнопку: по type или по классу .btn
         const btn = formUserData.querySelector('button[type="submit"]') || formUserData.querySelector('.btn');
         const originalText = btn ? btn.textContent.trim() : 'Save settings';
+        let shouldRestoreButton = true; // для перезагрузки при изменении данных
         setButtonLoading(btn, true, originalText);
         try {
             // создаём FormData из формы
             const formData = new FormData(formUserData);
-            await (0, _updateSettingsJs.updateSettings)(formData, 'data');
+            // для перезагрузки при изменении данных
+            const ok = await (0, _updateSettingsJs.updateSettings)(formData, 'data');
+            if (ok) {
+                if (btn) btn.textContent = 'Saved!';
+                shouldRestoreButton = false;
+                // Небольшая пауза: пользователь видит успешный статус,
+                // после чего страница перезагружается с уже актуальными данными.
+                window.setTimeout(()=>location.reload(), 900);
+            }
         // форму с именем и email не сбрасуем — поля остаются с новыми данными
         } finally{
-            setButtonLoading(btn, false, originalText);
+            if (shouldRestoreButton) setButtonLoading(btn, false, originalText);
         }
     });
     //-- Форма пароля --//

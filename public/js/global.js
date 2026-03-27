@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formUserData.querySelector('button[type="submit"]') ||
         formUserData.querySelector('.btn');
       const originalText = btn ? btn.textContent.trim() : 'Save settings';
+      let shouldRestoreButton = true; // для перезагрузки при изменении данных
 
       setButtonLoading(btn, true, originalText);
 
@@ -39,10 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // создаём FormData из формы
         const formData = new FormData(formUserData);
 
-        await updateSettings(formData, 'data');
+        // для перезагрузки при изменении данных
+        const ok = await updateSettings(formData, 'data');
+        if (ok) {
+          if (btn) btn.textContent = 'Saved!';
+          shouldRestoreButton = false;
+          // Небольшая пауза: пользователь видит успешный статус,
+          // после чего страница перезагружается с уже актуальными данными.
+          window.setTimeout(() => location.reload(), 900);
+        }
         // форму с именем и email не сбрасуем — поля остаются с новыми данными
       } finally {
-        setButtonLoading(btn, false, originalText);
+        if (shouldRestoreButton) setButtonLoading(btn, false, originalText);
       }
     });
   }

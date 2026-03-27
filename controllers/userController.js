@@ -1,5 +1,7 @@
 const multer = require('multer'); // для загрузки пользовательских img
 const sharp = require('sharp'); // для обработки и ресайза изображений
+const fs = require('fs');
+const path = require('path');
 
 const User = require('../models/userModel'); // импортируем модель
 const catchAsync = require('../utils/catchAsync');
@@ -51,9 +53,9 @@ const resizeUserPhoto = (req, res, next) => {
     .resize(500, 500) // размер (квадрат)
     .toFormat('jpeg') // формат
     .jpeg({ quality: 90 }) // качество
-    .toFile(`public/img/users/${req.file.filename}`); // преобразуем в фаил и отправляем в нужную папку
-
-  next();
+    .toFile(`public/img/users/${req.file.filename}`) // преобразуем в файл и отправляем в нужную папку
+    .then(() => next())
+    .catch(next);
 };
 
 // Функция для фильтрации ненужных полей
@@ -71,6 +73,13 @@ const updateMe = catchAsync(async (req, res, next) => {
   // Позволяем менять только эти поля
   const ALLOWED_FIELDS = ['name', 'email'];
 
+  // Эти фото создаем через API и безопасны для удаления при смене аватара.
+  // seed-файлы вроде `default.jpg` и `user-1.jpg ... user-20.jpg` не подпадают под этот паттерн.
+  const isApiGeneratedPhoto = filename =>
+    typeof filename === 'string' &&
+    // user-<mongodbObjectId>-<timestamp>.jpeg
+    /^user-[0-9a-f]{24}-\d+\.jpeg$/i.test(filename);
+
   // 1) Запрет смены пароля на этом роуте
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -80,7 +89,12 @@ const updateMe = catchAsync(async (req, res, next) => {
 
   // 2) Жёсткая фильтрация входных полей
   const data = filterObj(req.body, ...ALLOWED_FIELDS); // { name, email }
-  if (req.file) data.photo = req.file.filename; // добавляем photo, если есть файл
+  let previousPhoto;
+  if (req.file) {
+    const previousUser = await User.findById(req.user.id).select('photo');
+    previousPhoto = previousUser?.photo;
+    data.photo = req.file.filename; // добавляем photo, если есть файл
+  }
 
   // 3) Если email меняется — можно пометить как неподтверждённый/завести pendingEmail и отправить письмо
   //    Пример: if (data.email) { data.pendingEmail = data.email; delete data.email; /* send verify */ }
@@ -99,6 +113,30 @@ const updateMe = catchAsync(async (req, res, next) => {
       user: updatedUser
     }
   });
+
+  // 5) Удаляем старый файл только если он создан через API и отличается от нового.
+  // Операция не должна влиять на ответ пользователю — ошибки подавляем.
+  if (
+    req.file &&
+    previousPhoto &&
+    isApiGeneratedPhoto(previousPhoto) &&
+    previousPhoto !== req.file.filename
+  ) {
+    const oldPhotoPath = path.join(
+      __dirname,
+      '..',
+      'public',
+      'img',
+      'users',
+      previousPhoto
+    );
+
+    try {
+      await fs.promises.unlink(oldPhotoPath);
+    } catch (err) {
+      // Не ломаем запрос, если файла нет/не удалился
+    }
+  }
 });
 
 // --- Удалить свой профиль --- //

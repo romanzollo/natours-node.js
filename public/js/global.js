@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setButtonLoading(btn, true, originalText);
 
       try {
-        const name = document.getElementById('name')?.value.trim();
-        const email = document.getElementById('email')?.value.trim();
+        // создаём FormData из формы
+        const formData = new FormData(formUserData);
 
-        await updateSettings({ name, email }, 'data');
+        await updateSettings(formData, 'data');
         // форму с именем и email не сбрасуем — поля остаются с новыми данными
       } finally {
         setButtonLoading(btn, false, originalText);

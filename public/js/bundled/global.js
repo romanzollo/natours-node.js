@@ -236,12 +236,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
         const originalText = btn ? btn.textContent.trim() : 'Save settings';
         setButtonLoading(btn, true, originalText);
         try {
-            const name = document.getElementById('name')?.value.trim();
-            const email = document.getElementById('email')?.value.trim();
-            await (0, _updateSettingsJs.updateSettings)({
-                name,
-                email
-            }, 'data');
+            // создаём FormData из формы
+            const formData = new FormData(formUserData);
+            await (0, _updateSettingsJs.updateSettings)(formData, 'data');
         // форму с именем и email не сбрасуем — поля остаются с новыми данными
         } finally{
             setButtonLoading(btn, false, originalText);

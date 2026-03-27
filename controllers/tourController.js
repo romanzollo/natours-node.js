@@ -4,9 +4,8 @@ const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
 const AppError = require('../utils/appError');
 
-// ==================== MIDDLEWARE ====================
 // middleware для получения 5 самых дешевых/популярных туров
-// ⚠️ В Express 5 req.query нельзя мутировать напрямую,
+// В Express 5 req.query нельзя мутировать напрямую,
 // поэтому складываем "виртуальные параметры" в req.aliasQuery
 const aliasTopTours = (req, res, next) => {
   req.aliasQuery = {

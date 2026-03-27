@@ -1,5 +1,4 @@
 const multer = require('multer'); // для загрузки пользовательских img
-const sharp = require('sharp'); // для обработки и ресайза изображений
 const fs = require('fs');
 const path = require('path');
 
@@ -7,6 +6,7 @@ const User = require('../models/userModel'); // импортируем моде�
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory'); // импортируем фабричный контроллер для CRUD операций
+const { processImage, generateFilename } = require('../utils/imageProcessor');
 
 // --- создаем middleware multer --- //
 // определяем и настраиваем хранилище файлов
@@ -21,9 +21,11 @@ const factory = require('./handlerFactory'); // импортируем фабр�
 //     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
 //   }
 // });
-const multerStorage = multer.memoryStorage(); // сохраняем изображение в буффер
+// ==========================================
+// MULTER CONFIGURATION
+// ==========================================
+const multerStorage = multer.memoryStorage(); // Храним в буфере для обработки в sharp
 
-// определяем фильтр соответствия файла (в данном случае только 'image')
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
@@ -31,32 +33,27 @@ const multerFilter = (req, file, cb) => {
     cb(new AppError(400, 'Not an image! Please upload only images.'), false);
   }
 };
-// формируем загрузку с нашими настройками
+
 const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // макс. 5 МБ
-  }
+  limits: { fileSize: 5 * 1024 * 1024 } // 5 MB limit
 });
-// создаем middleware для загрузки изображения и используем его в контроллере
+
 const uploadUserPhoto = upload.single('photo');
 
-// создаем middleware для формирования изображения юзера с нкжными нам параметрами
-const resizeUserPhoto = (req, res, next) => {
+// создаем middleware для формирования изображения юзера с нужными нам параметрами
+const resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  req.file.filename = await processImage(
+    req.file.buffer,
+    generateFilename('user', req.user.id),
+    'user'
+  );
 
-  // берем изображение из буффера и настраиваем
-  sharp(req.file.buffer)
-    .resize(500, 500) // размер (квадрат)
-    .toFormat('jpeg') // формат
-    .jpeg({ quality: 90 }) // качество
-    .toFile(`public/img/users/${req.file.filename}`) // преобразуем в файл и отправляем в нужную папку
-    .then(() => next())
-    .catch(next);
-};
+  next();
+});
 
 // Функция для фильтрации ненужных полей
 const filterObj = (obj, ...allowed) => {

@@ -15,6 +15,7 @@ const {
   getToursWithin,
   getDistances
 } = require('./../controllers/tourController');
+const { uploadTourImages, resizeTourImages } = require('../middlewares/upload');
 const { protect, restrictTo } = require('./../controllers/authController');
 const canSeeSecretTours = require('../middlewares/canSeeSecretTours');
 const reviewRouter = require('./reviewRoutes');
@@ -56,7 +57,13 @@ router
 router
   .route('/:id', xss())
   .get(getTour) // получить тур по id
-  .patch(protect, restrictTo('admin', 'lead-guide'), updateTour) // обновить тур
+  .patch(
+    protect,
+    restrictTo('admin', 'lead-guide'),
+    uploadTourImages,
+    resizeTourImages,
+    updateTour
+  ) // обновить тур
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour); // удалить тур
 
 module.exports = router;

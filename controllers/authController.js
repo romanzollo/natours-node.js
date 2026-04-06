@@ -5,7 +5,7 @@ const crypto = require('crypto'); // встроенная библиотека �
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const sendMail = require('../utils/email');
+const Email = require('../utils/email');
 const { createSendToken } = require('../utils/jwt'); // импортируем функцию отправки токена
 
 // --- РЕГИСТРАЦИЯ --- //
@@ -30,6 +30,10 @@ const signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm
   });
+
+  const url = `${req.protocol}://${req.get('host')}/account`;
+  console.log(url);
+  await new Email(newUser, url).sendWelcome();
 
   return createSendToken(newUser, 201, res, { includeUser: true }); // вернуть токен + пользователя
 });
@@ -207,11 +211,11 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 
   try {
     // отправляем почту
-    await sendMail({
-      email: user.email,
-      subject: 'Your password reset token (valid for 10 min)',
-      message
-    });
+    // await sendMail({
+    //   email: user.email,
+    //   subject: 'Your password reset token (valid for 10 min)',
+    //   message
+    // });
 
     res.status(200).json({
       status: 'success',

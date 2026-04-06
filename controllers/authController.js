@@ -32,7 +32,6 @@ const signup = catchAsync(async (req, res, next) => {
   });
 
   const url = `${req.protocol}://${req.get('host')}/account`;
-  console.log(url);
   await new Email(newUser, url).sendWelcome();
 
   return createSendToken(newUser, 201, res, { includeUser: true }); // вернуть токен + пользователя
@@ -203,25 +202,21 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }); // сохраняем изменения
 
   // 3) отправляем его пользователю по почте
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/reset-password/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
-
   try {
     // отправляем почту
-    // await sendMail({
-    //   email: user.email,
-    //   subject: 'Your password reset token (valid for 10 min)',
-    //   message
-    // });
+    const resetURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/reset-password/${resetToken}`;
+
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',
       message: 'Token sent to email!'
     });
   } catch (error) {
+    console.error('📧 EMAIL ERROR:', error); // 👈 Добавьте это!
+
     user.passwordResetToken = undefined; // удаляем токен
     user.passwordResetExpires = undefined; // удаляем время истечения
     await user.save({

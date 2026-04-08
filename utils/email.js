@@ -12,8 +12,26 @@ module.exports = class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      // resend
-      return true;
+      // Resend через SMTP
+      //   return nodemailer.createTransport({
+      //     host: 'smtp.resend.com',
+      //     port: 465,
+      //     secure: true, // true для порта 465
+      //     auth: {
+      //       user: 'resend', // фиксированное значение
+      //       pass: process.env.RESEND_API_KEY // API-ключ
+      //     }
+      //   });
+      // gmail smtp
+      return nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: Number(process.env.EMAIL_PORT) || 465,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD
+        }
+      });
     }
 
     return nodemailer.createTransport({
@@ -45,7 +63,21 @@ module.exports = class Email {
     };
 
     // 3) создаем транспортер и отправляем почту с помощью транспортера (nodemailer)
-    await this.newTransport().sendMail(mailOptions);
+    try {
+      await this.newTransport().sendMail(mailOptions);
+    } catch (err) {
+      // В production отдаём пользователю безопасный 500, но тут логируем первопричину.
+      console.error('📧 EMAIL SEND FAILED');
+      console.error({
+        message: err?.message,
+        name: err?.name,
+        code: err?.code,
+        command: err?.command,
+        responseCode: err?.responseCode,
+        response: err?.response
+      });
+      throw err;
+    }
   }
 
   async sendWelcome() {

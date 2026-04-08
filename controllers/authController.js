@@ -32,7 +32,16 @@ const signup = catchAsync(async (req, res, next) => {
   });
 
   const url = `${req.protocol}://${req.get('host')}/account`;
-  await new Email(newUser, url).sendWelcome();
+  try {
+    await new Email(newUser, url).sendWelcome();
+  } catch (error) {
+    // Не блокируем регистрацию из-за сбоя SMTP.
+    console.error('📧 WELCOME EMAIL FAILED (signup continues):', {
+      message: error?.message,
+      code: error?.code,
+      responseCode: error?.responseCode
+    });
+  }
 
   return createSendToken(newUser, 201, res, { includeUser: true }); // вернуть токен + пользователя
 });

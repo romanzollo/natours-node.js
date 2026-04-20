@@ -1,6 +1,8 @@
 const Tour = require('../models/tourModel');
+const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const { confirmPaymentAndCreateBooking } = require('./bookingController');
 
 exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Получаем все данные из коллекции Tours
@@ -44,5 +46,42 @@ exports.getLoginForm = catchAsync(async (req, res, next) => {
 exports.getAccount = catchAsync(async (req, res) => {
   res.status(200).render('account', {
     title: 'Your account'
+  });
+});
+
+exports.getMyTours = catchAsync(async (req, res, next) => {
+  // Fallback-поток без webhook:
+  // если пользователь вернулся с paymentId в query, сами проверяем статус платежа
+  // через API YooKassa и создаем Booking при status=succeeded.
+  if (req.query?.paymentId) {
+    await confirmPaymentAndCreateBooking(req.query.paymentId, req.user.id);
+  }
+
+  // 1) Получаем бронирования текущего пользователя.
+  const bookings = await Booking.find({ user: req.user.id, status: 'paid' });
+
+  // Если подтвержденных бронирований пока нет, сразу рендерим пустой список.
+  // Это защищает от ошибок приведения типов и дает корректный UX.
+  if (bookings.length === 0) {
+    return res.status(200).render('overview', {
+      title: 'My Tours',
+      tours: []
+    });
+  }
+
+  // 2) Достаем массив id туров из бронирований.
+  const tourIds = bookings.map(booking => String(booking.tour));
+
+  // 3) Загружаем туры по id без операторного фильтра.
+  // В проекте включен mongoose.set('sanitizeFilter', true), поэтому
+  // операторы вроде $in в некоторых местах могут быть "обезврежены".
+  // Этот вариант работает стабильно в вашей конфигурации.
+  const toursRaw = await Promise.all(tourIds.map(id => Tour.findById(id)));
+  const tours = toursRaw.filter(Boolean);
+
+  // 4) Рендерим ту же страницу overview, но уже только с купленными турами.
+  return res.status(200).render('overview', {
+    title: 'My Tours',
+    tours
   });
 });

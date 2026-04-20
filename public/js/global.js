@@ -13,6 +13,38 @@ const setButtonLoading = (btn, loading, originalText) => {
 document.addEventListener('DOMContentLoaded', () => {
   initLogin();
 
+  // Fallback без webhook:
+  // если вернулись на /my-tours после оплаты и в localStorage есть pending payment id,
+  // подтверждаем платеж на сервере (через API YooKassa), создаем Booking и обновляем страницу.
+  if (window.location.pathname === '/my-tours') {
+    const pendingPaymentId = localStorage.getItem('pendingYooKassaPaymentId');
+    if (pendingPaymentId) {
+      const verificationIndicator = document.createElement('div');
+      verificationIndicator.className = 'alert alert--success';
+      verificationIndicator.setAttribute('role', 'status');
+      verificationIndicator.setAttribute('aria-live', 'polite');
+      verificationIndicator.textContent = 'Verifying payment...';
+      document.body.appendChild(verificationIndicator);
+
+      localStorage.removeItem('pendingYooKassaPaymentId');
+      fetch(`/api/v1/bookings/confirm-payment/${pendingPaymentId}`, {
+        method: 'POST',
+        credentials: 'same-origin'
+      })
+        .then(() => {
+          verificationIndicator.remove();
+          window.setTimeout(() => window.location.reload(), 250);
+        })
+        .catch(() => {
+          verificationIndicator.remove();
+          showAlert(
+            'error',
+            'Payment verification failed. Please refresh My Tours in a few seconds.'
+          );
+        });
+    }
+  }
+
   // Logout
   document
     .querySelector('.nav__el--logout')

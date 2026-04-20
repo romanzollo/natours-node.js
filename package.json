@@ -36,7 +36,8 @@
     "sharp": "^0.34.5",
     "slugify": "^1.6.6",
     "validator": "^13.15.15",
-    "xss": "^1.0.15"
+    "xss": "^1.0.15",
+    "yookassa": "^0.1.1"
   },
   "devDependencies": {
     "buffer": "^6.0.3",

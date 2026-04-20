@@ -18,6 +18,8 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 // Импортируем маршруты для работы с HTML-шаблонами (PUG)
 const viewRouter = require('./routes/viewRoutes');
+// Импортируем маршруты для работы с бронированиями из внешнего файла
+const bookingRouter = require('./routes/bookingRoutes');
 // Импортируем модуль для работы с ошибками
 const AppError = require('./utils/appError');
 // Импортируем глобальный обработчик ошибок
@@ -188,6 +190,9 @@ app.use('/api/v1/users', userRouter);
 
 // Подключаем маршруты для отзывов
 app.use('/api/v1/reviews', reviewRouter);
+
+// Подключаем маршруты для бронирований
+app.use('/api/v1/bookings', bookingRouter);
 
 // 404: в конец, до глобального обработчика
 app.use((req, res, next) => {

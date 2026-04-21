@@ -13,6 +13,7 @@ const yookassa = new YooKassa({
   secretKey: process.env.YOOKASSA_SECRET_KEY
 });
 
+// Проверяем, что ключи YooKassa действительно загружены.
 const ensureYooKassaCredentials = () => {
   if (!process.env.YOOKASSA_SHOP_ID || !process.env.YOOKASSA_SECRET_KEY) {
     throw new AppError(
@@ -51,10 +52,13 @@ const createBookingFromPaidYooKassaPayment = async payment => {
   });
 };
 
-// Получает платеж из YooKassa и создает Booking, если он оплачен.
+// Получаем платеж из YooKassa и создаем Booking, если он оплачен успешно.
 // expectedUserId нужен для fallback-режима без webhook:
 // подтверждаем оплату только для текущего авторизованного пользователя.
-const confirmPaymentAndCreateBooking = async (paymentId, expectedUserId = null) => {
+const confirmPaymentAndCreateBooking = async (
+  paymentId,
+  expectedUserId = null
+) => {
   if (!paymentId) return null;
 
   ensureYooKassaCredentials();
@@ -102,7 +106,7 @@ const getCheckoutSession = catchAsync(async (req, res, next) => {
         return_url: successUrl
       },
       // capture: true => деньги спишутся автоматически после успешной авторизации.
-      // Для учебного проекта это самый простой и удобный вариант.
+      // Для моего учебного проекта это самый простой и удобный вариант.
       capture: true,
       description: `${tour.name} Tour`,
       // metadata возвращается в webhook-событиях.
@@ -132,7 +136,7 @@ const getCheckoutSession = catchAsync(async (req, res, next) => {
 // Здесь мы фиксируем реальный результат оплаты и создаем Booking.
 const yookassaWebhook = catchAsync(async (req, res, next) => {
   // Дополнительная защита:
-  // если вы проксируете webhook через свой шлюз (ngrok/cloudflare worker/Nginx),
+  // если мы проксируем webhook через свой шлюз (ngrok/cloudflare worker/Nginx),
   // можно передавать секрет в заголовке x-yookassa-webhook-secret.
   const receivedSecret = req.get('x-yookassa-webhook-secret');
   if (

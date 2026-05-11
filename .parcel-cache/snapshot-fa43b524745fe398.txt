@@ -47,7 +47,7 @@
 87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\psl\dist\psl.cjs134205871749544501 0
 117C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@swc\helpers\cjs\_class_private_method_get.cjs134159223867412444 0
 113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\yargs\node_modules\strip-ansi\package.json134161747958508733 0
-85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js134211920433206856 0
+85C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js134212757658547779 0
 89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\round.js133976923766455074 0
 130C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@mischnic\json-sourcemap\node_modules\json5\lib\register.js134159223864902690 0
 77C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\global.js134211920341806035 0
@@ -126,7 +126,7 @@
 111C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\full\dom-collections\for-each.js134164337475467432 0
 95C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lodash\fp\reduceRight.js133976923766237063 0
 116C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@babel\types\lib\converters\toKeyAlias.js.map134108811862741468 0
-75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled134211920433346819 1
+75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled134212757659287846 1
 112C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@parcel\core\src\requests\EntryRequest.js134159223892484271 0
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\full\math\degrees.js134164337461880000 0
 67C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js134177087756294555 1
@@ -266,7 +266,7 @@
 67C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\server.js134162645921218849 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2025\StringToNumber.js133976917586320012 0
 126C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\aria-query\lib\etc\roles\graphics\graphicsObjectRole.js133976917545673718 0
-89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js.map134211920433326729 0
+89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\global.js.map134212757659037818 0
 139C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\eslint-plugin-react\lib\rules\function-component-definition.d.ts.map133976917552263288 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2024\Day.js133976917570833157 0
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\internal\operators\max.js.map133976923779343356 0
@@ -348,7 +348,7 @@
 109C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\internal\operators\timeout.js.map133976923784908380 0
 122C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\@parcel\core\test\fixtures\custom-format-infer-type134159223896186063 1
 109C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\multer\node_modules\type-is\HISTORY.md134185636583470711 0
-75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\account.pug134190760638234273 0
+75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\account.pug134212766100408819 0
 73C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\error.pug134168744650596643 0
 88C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\ignore-by-default133991574990030921 1
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\whatwg-url\lib\URL-impl.js133991567337428608 0
@@ -400,7 +400,7 @@
 91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\streamsearch\.github134185636582350647 1
 76C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\overview.pug134137549993973800 0
 108C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\add\operator\bufferToggle.js.map133976923773009724 0
-72C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\tour.pug134211878655114055 0
+72C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\views\tour.pug134212741234766535 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mongodb\lib\sdam\events.js133991567350039016 0
 121C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\caniuse-lite\data\features\intersectionobserver.js134159223879529892 0
 108C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\modules\es.string.trim-end.js134164337466907851 0
@@ -577,7 +577,7 @@
 105C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\internal\operators\share.d.ts133976923796439508 0
 113C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\full\array\virtual\group-to-map.js134164337478500431 0
 91C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\img\tours\tour-4-cover.jpg133755454870000000 0
-83C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js134211918570929200 0
+83C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js134212757658547779 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\es-abstract\2021\Get.js133976917573408578 0
 104C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\add\operator\mergeMap.js.map133976923779586171 0
 111C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\actual\typed-array\int8-array.js134164337481701374 0
@@ -596,7 +596,7 @@
 111C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\stable\array\virtual\iterator.js134164337484111531 0
 93C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\parse-srcset\README.md134075384928885630 0
 102C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\string.prototype.trimend\.nycrc133976917523300535 0
-75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\tour.js134211918391789181 0
+75C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\tour.js134212759540437127 0
 92C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\rxjs\operator\race.js133976923765593840 0
 122C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mongodb\src\client-side-encryption\providers\aws.ts133991567356149731 0
 88C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\lmdb\node_modules134159223858557486 1
@@ -608,7 +608,7 @@
 99C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\features\unescape.js134164337498591592 0
 94C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\yargs\build\lib\typings134161747960521185 1
 108C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\core-js\modules\es.set.constructor.js134164337466317900 0
-87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js.map134211918571059153 0
+87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\js\bundled\tour.js.map134212757659037818 0
 97C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\utility-types\CHANGELOG.md134159223865615895 0
 89C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\public\img\logo-green-round.png133755454870000000 0
 128C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\node_modules\mongodb\lib\client-side-encryption\providers\index.js.map133991567353399128 0
@@ -27884,7 +27884,7 @@
 80C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\dev-data\data\tour5.js133755454870000000 0
 82C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\dev-data\data\tours.json133755454870000000 0
 82C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\dev-data\data\users.json134090877313688213 0
-90C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\bookingController.js134211918213635025 0
+90C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\bookingController.js134212746349902686 0
 87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\handlerFactory.js134091419701931605 0
 87C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\tourController.js134191009377664402 0
 92C:\Users\user\Desktop\Jonas Schmedtmann\Node.js\4-natours\controllers\userAdminController.js134063275128006328 0

@@ -58,7 +58,10 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   }
 
   // 1) Получаем бронирования текущего пользователя.
-  const bookings = await Booking.find({ user: req.user.id, status: 'paid' });
+  const bookings = await Booking.find({
+    user: req.user.id,
+    status: 'paid'
+  });
 
   // Если подтвержденных бронирований пока нет, сразу рендерим пустой список.
   // Это защищает от ошибок приведения типов и дает корректный UX.
@@ -75,9 +78,15 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   // 3) Загружаем туры по id без операторного фильтра.
   // В проекте включен mongoose.set('sanitizeFilter', true), поэтому
   // операторы вроде $in в некоторых местах могут быть "обезврежены".
-  // Этот вариант работает стабильно в вашей конфигурации.
-  const toursRaw = await Promise.all(tourIds.map(id => Tour.findById(id)));
-  const tours = toursRaw.filter(Boolean);
+  // Этот вариант работает стабильно в нашей конфигурации.
+  const toursRaw = await Promise.all(tourIds.map(id => Tour.findById(id))); // создаём массив промисов, где каждый Tour.findById(id) — это отдельный запрос к MongoDB
+  const tours = toursRaw.filter(Boolean); // удаляем из массива все "ложные" значения (null, undefined, false и т.д.)
+  /* 
+    В данном контексте это нужно, чтобы отфильтровать случаи, когда:
+        - Тур был удалён из базы, но бронирование осталось ("битая ссылка")
+        - tourIds содержал невалидный ObjectId
+        - Произошла тихая ошибка при загрузке
+    */
 
   // 4) Рендерим ту же страницу overview, но уже только с купленными турами.
   return res.status(200).render('overview', {

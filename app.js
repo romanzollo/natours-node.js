@@ -9,6 +9,7 @@ const helmet = require('helmet'); // для защиты HTTP-headers
 const { xss } = require('express-xss-sanitizer'); // для санитизации входных данных
 const hpp = require('hpp'); // для предотвращения дублирования HTTP-параметров
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 // Импортируем маршруты для туров из внешнего файла
 const tourRouter = require('./routes/tourRoutes');
@@ -29,6 +30,11 @@ require('dotenv').config();
 
 // Создаём экземпляр приложения Express
 const app = express();
+
+// За reverse proxy (Render, Fly.io, Heroku): корректные IP, HTTPS и rate-limit
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
 
 // Переменные окружения
 app.locals.yandexMapsKey = process.env.YANDEX_MAPS_KEY || ''; // ключ API Яндекс.Карт
@@ -174,6 +180,9 @@ app.use((req, res, next) => {
   //   console.log(req.cookies); // выводим cookies
   next();
 });
+
+// Сжимаем HTTP-ответы сервера
+app.use(compression());
 
 // ==================== МАРШРУТИЗАЦИЯ ====================
 // Подключаем маршруты для HTML-шаблонов

@@ -1,0 +1,7 @@
+node_modules
+.git
+.parcel-cache
+dev-data
+.env
+*.md
+.vscode

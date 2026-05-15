@@ -96,7 +96,7 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
 
   // переводим дату в секунды
   const changedTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000);
-  console.log(changedTimestamp, JWTTimestamp);
+  //   console.log(changedTimestamp, JWTTimestamp);
 
   // true - если пароль был изменен, false - если пароль не был изменен
   return JWTTimestamp < changedTimestamp;

@@ -58,7 +58,10 @@
     "prettier": "^1.19.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
+  },
+  "overrides": {
+    "iconv-lite": "0.7.1"
   },
   "browserslist": [
     "last 2 versions",

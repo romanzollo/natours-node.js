@@ -1,6 +1,6 @@
 # Rename "app" after: fly apps create Natours
 app = "natours"
-primary_region = "rus"
+primary_region = "fra"
 
 [build]
   dockerfile = "Dockerfile"

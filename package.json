@@ -7,7 +7,7 @@
     "dev:debug": "nodemon --inspect=9230 server.js",
     "prod": "cross-env NODE_ENV=production nodemon server.js",
     "watch:js": "parcel watch public/js/global.js public/js/tour.js --dist-dir public/js/bundled --no-hmr",
-    "build:js": "parcel build public/js/global.js public/js/tour.js --dist-dir public/js/bundled --no-source-maps",
+    "build:js": "parcel build public/js/global.js public/js/tour.js --dist-dir public/js/bundled --no-source-maps --no-cache",
     "build": "npm run build:js",
     "dev:full": "concurrently \"npm run dev\" \"npm run watch:js\""
   },

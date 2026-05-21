@@ -31,7 +31,7 @@ require('dotenv').config();
 // Создаём экземпляр приложения Express
 const app = express();
 
-// За reverse proxy (Render, Fly.io, Heroku): корректные IP, HTTPS и rate-limit
+// Для работы с reverse proxy (Render, Fly.io, Heroku)
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }

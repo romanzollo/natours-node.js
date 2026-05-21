@@ -3,11 +3,13 @@ services:
     name: natours
     runtime: node
     plan: free
-    buildCommand: npm ci && npm run build
+    buildCommand: NPM_CONFIG_PRODUCTION=false npm ci && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_VERSION
         value: "20.18.0"
+      - key: NPM_CONFIG_PRODUCTION
+        value: "false"
       - key: NODE_ENV
         value: production
       - key: DATABASE

@@ -8,7 +8,8 @@
     "prod": "cross-env NODE_ENV=production nodemon server.js",
     "watch:js": "parcel watch public/js/global.js public/js/tour.js --dist-dir public/js/bundled --no-hmr",
     "build:js": "parcel build public/js/global.js public/js/tour.js --dist-dir public/js/bundled --no-source-maps --no-cache",
-    "build": "npm run build:js",
+    "build": "npm run build:js && node scripts/verify-deps.js",
+    "postinstall": "node scripts/verify-deps.js",
     "dev:full": "concurrently \"npm run dev\" \"npm run watch:js\""
   },
   "author": "Roman",
@@ -28,6 +29,7 @@
     "helmet": "^8.1.0",
     "hpp": "^0.2.3",
     "html-to-text": "^9.0.5",
+    "iconv-lite": "0.6.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.1",
     "morgan": "^1.10.1",
@@ -61,7 +63,7 @@
     "node": "20.x"
   },
   "overrides": {
-    "iconv-lite": "0.7.1"
+    "iconv-lite": "0.6.3"
   },
   "browserslist": [
     "last 2 versions",
